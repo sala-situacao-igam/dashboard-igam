@@ -1,0 +1,1147 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicador 2.2 — Disponibilidade de dados</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plano:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plano:     #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plano:     #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page-plano);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-primary);
+  }
+  .pagina { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .subtitulo { color: var(--text-secondary); margin: 0 0 28px; font-size: 0.95rem; }
+
+  .cartao {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin-bottom: 20px;
+  }
+
+  .hero-label { color: var(--text-secondary); font-size: 0.85rem; margin: 0 0 6px; }
+  .hero-valor { font-size: 3rem; font-weight: 600; line-height: 1; }
+  .hero-valor small { font-size: 1.2rem; color: var(--text-muted); font-weight: 400; }
+  .hero-secundario { font-size: 0.8rem; color: var(--text-secondary); margin: 8px 0 0; }
+  .hero-secundario .valor-secundario { color: var(--text-muted); }
+
+  .grade-tiles { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .tile-status {
+    border: 1.5px solid;
+    border-color: var(--border);
+    border-radius: 8px;
+    padding: 12px 8px;
+    text-align: center;
+    background: var(--surface-1);
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+    transition: background 0.1s ease, border-color 0.1s ease;
+  }
+  .tile-status:hover { background: var(--gridline); }
+  .tile-status:focus-visible { outline: 2px solid var(--cor-tile); outline-offset: 1px; }
+  .tile-status[aria-pressed="true"] {
+    border-color: var(--cor-tile);
+    background: color-mix(in srgb, var(--cor-tile) 12%, var(--surface-1));
+  }
+  .icone-status { display: block; font-size: 1.1rem; margin-bottom: 2px; }
+  .valor-tile { display: block; font-size: 1.5rem; font-weight: 600; color: var(--text-primary); }
+  .rotulo-tile { display: block; font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+
+  .barra-ferramentas {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    margin-bottom: 14px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+  }
+  .barra-ferramentas label { display: inline-flex; align-items: center; gap: 6px; }
+  .barra-ferramentas select, .barra-ferramentas button {
+    font: inherit;
+    color: inherit;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  .barra-ferramentas select:hover, .barra-ferramentas button:hover { background: var(--gridline); }
+  #contador-estacoes { margin-left: auto; color: var(--text-muted); }
+
+  .lista-estacoes { display: flex; flex-direction: column; }
+  .linha-estacao {
+    display: grid;
+    grid-template-columns: 190px 1fr 110px;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 4px;
+    border-radius: 6px;
+    position: relative;
+  }
+  .linha-estacao:hover, .linha-estacao:focus {
+    background: var(--gridline);
+    outline: none;
+  }
+  .rotulo-estacao { display: flex; flex-direction: column; overflow: hidden; }
+  .rotulo-principal {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .rotulo-secundario {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .trilha-barra {
+    display: block;
+    height: 14px;
+    border-radius: 4px;
+    position: relative;
+    /* Marcações finas nos limiares oficiais da tabela de pontuação (70/80/
+       90/95%), pra dar noção de distância até a próxima faixa -- some por
+       baixo da barra colorida quando a estação já passou daquele ponto. */
+    background:
+      linear-gradient(to right, transparent 69.6%, var(--baseline) 69.6%, var(--baseline) 70.4%, transparent 70.4%),
+      linear-gradient(to right, transparent 79.6%, var(--baseline) 79.6%, var(--baseline) 80.4%, transparent 80.4%),
+      linear-gradient(to right, transparent 89.6%, var(--baseline) 89.6%, var(--baseline) 90.4%, transparent 90.4%),
+      linear-gradient(to right, transparent 94.6%, var(--baseline) 94.6%, var(--baseline) 95.4%, transparent 95.4%),
+      var(--gridline);
+  }
+  .barra {
+    display: block;
+    height: 14px;
+    border-radius: 4px;
+    min-width: 3px;
+  }
+  .valor-barra {
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .valor-secundario { font-weight: 400; color: var(--text-muted); }
+
+  .linha-estacao::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 0;
+    top: -30px;
+    background: var(--text-primary);
+    color: var(--surface-1);
+    padding: 5px 9px;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s ease;
+    z-index: 2;
+    max-width: 90vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .linha-estacao:hover::after, .linha-estacao:focus::after {
+    opacity: 1;
+  }
+
+  .legenda-titulo { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); margin: 0 0 8px; }
+  .legenda { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 20px; font-size: 0.82rem; color: var(--text-secondary); }
+  .legenda span { display: inline-flex; align-items: center; gap: 5px; }
+
+  details.tabela-acessivel summary {
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding: 4px 0;
+  }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--gridline); }
+  td.numero, th.numero { text-align: right; font-variant-numeric: tabular-nums; }
+  th { color: var(--text-secondary); font-weight: 600; }
+  th.th-ordenavel { cursor: pointer; user-select: none; }
+  th.th-ordenavel:hover { color: var(--text-primary); }
+  .seta-ordenacao { display: inline-block; margin-left: 4px; font-size: 0.7em; opacity: 0.7; }
+</style>
+<style>
+  .nav-site {
+    display: flex;
+    gap: 4px;
+    padding: 14px 20px 0;
+    max-width: 920px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.85rem;
+  }
+  .nav-site a {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #52514e;
+  }
+  .nav-site a:hover { background: #e1e0d9; }
+  .nav-site a[data-pagina="hidrometria"] {
+    background: #0b0b0b;
+    color: #fff;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<nav class="nav-site">
+  <a href="hidrometria.html" data-pagina="hidrometria">Hidrometria</a>
+  <a href="meteorologia.html" data-pagina="meteorologia">Meteorologia</a>
+</nav>
+
+<div class="viz-root">
+  <div class="pagina">
+    <h1>Indicador 2.2 — Disponibilidade de dados hidrológicos</h1>
+    <p class="subtitulo">Pontuação por estação, média do período todo desde o início de operação.</p>
+
+    <div class="cartao">
+      <p class="hero-label">Pontuação média geral (64 estações)</p>
+      <div class="hero-valor">5.61 <small>/ 10</small></div>
+      <p class="hero-secundario">percentual médio geral: <span class="valor-secundario">76,75%</span></p>
+    </div>
+
+    <div class="cartao">
+      <div class="grade-tiles">
+        <button type="button" class="tile-status" data-pontuacao="10"
+                aria-pressed="false" style="--cor-tile:#0ca30c;">
+          <span class="icone-status" style="color:#0ca30c;">✓</span>
+          <span class="valor-tile">8</span>
+          <span class="rotulo-tile">Ótima (10)</span>
+        </button>
+        <button type="button" class="tile-status" data-pontuacao="9"
+                aria-pressed="false" style="--cor-tile:#52c90de5;">
+          <span class="icone-status" style="color:#52c90de5;">✓</span>
+          <span class="valor-tile">8</span>
+          <span class="rotulo-tile">Muito boa (9)</span>
+        </button>
+        <button type="button" class="tile-status" data-pontuacao="8"
+                aria-pressed="false" style="--cor-tile:#fab219;">
+          <span class="icone-status" style="color:#fab219;">●</span>
+          <span class="valor-tile">18</span>
+          <span class="rotulo-tile">Boa (8)</span>
+        </button>
+        <button type="button" class="tile-status" data-pontuacao="7"
+                aria-pressed="false" style="--cor-tile:#ec835a;">
+          <span class="icone-status" style="color:#ec835a;">▲</span>
+          <span class="valor-tile">9</span>
+          <span class="rotulo-tile">Regular (7)</span>
+        </button>
+        <button type="button" class="tile-status" data-pontuacao="0"
+                aria-pressed="false" style="--cor-tile:#d03b3b;">
+          <span class="icone-status" style="color:#d03b3b;">✕</span>
+          <span class="valor-tile">21</span>
+          <span class="rotulo-tile">Reprovada (0)</span>
+        </button>
+      </div>
+    </div>
+
+    <p class="legenda-titulo">Disponibilidade de dados:</p>
+    <div class="legenda">
+      <span><strong style="color:#0ca30c;">&#10003;</strong> Ótima (10): 95%–100%</span>
+      <span><strong style="color:#52c90de5;">&#10003;</strong> Muito Boa (9): 90%–94,99%</span>
+      <span><strong style="color:#fab219;">&#9679;</strong> Boa (8): 80–89,99%</span>
+      <span><strong style="color:#ec835a;">&#9650;</strong> Regular (7): 70–79,99%</span>
+      <span><strong style="color:#d03b3b;">&#10007;</strong> Reprovada (0): abaixo de 70%</span>
+    </div>
+
+    <div class="barra-ferramentas">
+      <label for="filtro-variavel">Variável:
+        <select id="filtro-variavel">
+          <option value="todas">Todas</option>
+          <option value="cota">Cota</option>
+          <option value="chuva">Chuva</option>
+        </select>
+      </label>
+      <label for="filtro-ano">Ano de início:
+        <select id="filtro-ano">
+          <option value="todas">Todos</option>
+        </select>
+      </label>
+      <button type="button" id="botao-ordem">Maior → menor ▾</button>
+      <button type="button" id="botao-limpar">Limpar filtros</button>
+      <span id="contador-estacoes">Mostrando 64 de 64 estações</span>
+    </div>
+
+    <div class="cartao">
+      <div class="lista-estacoes" id="lista-estacoes" role="list"></div>
+    </div>
+
+    <details class="tabela-acessivel" open>
+      <summary>Ver como tabela (responde aos mesmos filtros acima -- clique num cabeçalho para ordenar por essa coluna)</summary>
+      <table>
+        <thead>
+          <tr>
+            <th data-campo="ranking" class="th-ordenavel">Ranking<span class="seta-ordenacao" data-seta="ranking"></span></th>
+            <th data-campo="codigo_estacao" class="th-ordenavel">Estação<span class="seta-ordenacao" data-seta="codigo_estacao"></span></th>
+            <th data-campo="variavel_usada" class="th-ordenavel">Variável<span class="seta-ordenacao" data-seta="variavel_usada"></span></th>
+            <th data-campo="ano_inicio_operacao" class="numero th-ordenavel">Início operação<span class="seta-ordenacao" data-seta="ano_inicio_operacao"></span></th>
+            <th data-campo="percentual_medio" class="numero th-ordenavel">% disponibilidade<span class="seta-ordenacao" data-seta="percentual_medio"></span></th>
+            <th data-campo="pontuacao" class="numero th-ordenavel">Pontuação<span class="seta-ordenacao" data-seta="pontuacao"></span></th>
+            <th data-campo="faixa" class="th-ordenavel">Faixa<span class="seta-ordenacao" data-seta="faixa"></span></th>
+          </tr>
+        </thead>
+        <tbody id="corpo-tabela">
+        <tr>
+          <td>1</td>
+          <td>60359090</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">97,98%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>60927010</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">97,93%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>61568050</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">97,59%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>56933020</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">97,54%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>60855010</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">96,44%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>40850010</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">96,41%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>60150050</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">95,94%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td>53511000</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">95,63%</td>
+          <td class="numero">10</td>
+          <td>Ótima (10)</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td>40185010</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">94,26%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td>61939000</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">92,85%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td>42550900</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">92,78%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td>61793990</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">92,48%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td>54195040</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">92,04%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td>61511900</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">91,91%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>15</td>
+          <td>60134000</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">91,83%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>16</td>
+          <td>02043133</td>
+          <td>chuva</td>
+          <td class="numero">2014</td>
+          <td class="numero">91,30%</td>
+          <td class="numero">9</td>
+          <td>Muito boa (9)</td>
+        </tr>
+        <tr>
+          <td>17</td>
+          <td>02142097</td>
+          <td>chuva</td>
+          <td class="numero">2014</td>
+          <td class="numero">89,30%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>18</td>
+          <td>58910001</td>
+          <td>cota</td>
+          <td class="numero">2014</td>
+          <td class="numero">88,88%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>19</td>
+          <td>61176200</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">88,41%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>20</td>
+          <td>61305000</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">88,33%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>21</td>
+          <td>40053100</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">87,13%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>22</td>
+          <td>02142096</td>
+          <td>chuva</td>
+          <td class="numero">2014</td>
+          <td class="numero">86,74%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>23</td>
+          <td>61135000</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">86,67%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>24</td>
+          <td>40710001</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">86,07%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>25</td>
+          <td>55660001</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">85,83%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>26</td>
+          <td>56860001</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">85,80%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>27</td>
+          <td>40100100</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">85,47%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>28</td>
+          <td>42690002</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">83,23%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>29</td>
+          <td>42970900</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">82,54%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>30</td>
+          <td>42255500</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">81,94%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>31</td>
+          <td>61271000</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">81,94%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>32</td>
+          <td>61060000</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">81,73%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>33</td>
+          <td>02044079</td>
+          <td>chuva</td>
+          <td class="numero">2014</td>
+          <td class="numero">81,21%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>34</td>
+          <td>41210001</td>
+          <td>cota</td>
+          <td class="numero">2015</td>
+          <td class="numero">80,87%</td>
+          <td class="numero">8</td>
+          <td>Boa (8)</td>
+        </tr>
+        <tr>
+          <td>35</td>
+          <td>54110003</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">77,76%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>36</td>
+          <td>43300001</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">77,55%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>37</td>
+          <td>02042051</td>
+          <td>chuva</td>
+          <td class="numero">2014</td>
+          <td class="numero">77,40%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>38</td>
+          <td>41151001</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">74,64%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>39</td>
+          <td>42145499</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">73,60%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>40</td>
+          <td>40755000</td>
+          <td>cota</td>
+          <td class="numero">2014</td>
+          <td class="numero">72,79%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>41</td>
+          <td>58921500</td>
+          <td>cota</td>
+          <td class="numero">2014</td>
+          <td class="numero">71,21%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>42</td>
+          <td>40680001</td>
+          <td>cota</td>
+          <td class="numero">2014</td>
+          <td class="numero">70,69%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>43</td>
+          <td>54501000</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">70,37%</td>
+          <td class="numero">7</td>
+          <td>Regular (7)</td>
+        </tr>
+        <tr>
+          <td>44</td>
+          <td>61370000</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">69,61%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>45</td>
+          <td>60850001</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">68,99%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>46</td>
+          <td>42251001</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">68,95%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>47</td>
+          <td>56083000</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">68,42%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>48</td>
+          <td>40712500</td>
+          <td>cota</td>
+          <td class="numero">2014</td>
+          <td class="numero">66,77%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>49</td>
+          <td>43429997</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">66,35%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>50</td>
+          <td>42860020</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">65,56%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>51</td>
+          <td>60101100</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">64,33%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>52</td>
+          <td>41940001</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">64,22%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>53</td>
+          <td>41955000</td>
+          <td>cota</td>
+          <td class="numero">2015</td>
+          <td class="numero">64,11%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>54</td>
+          <td>56990020</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">61,94%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>55</td>
+          <td>41180001</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">60,56%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>56</td>
+          <td>54730006</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">58,62%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>57</td>
+          <td>44252000</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">57,66%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>58</td>
+          <td>55610001</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">56,71%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>59</td>
+          <td>41075003</td>
+          <td>cota</td>
+          <td class="numero">2017</td>
+          <td class="numero">56,57%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>60</td>
+          <td>61260000</td>
+          <td>cota</td>
+          <td class="numero">2016</td>
+          <td class="numero">44,31%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>61</td>
+          <td>40974900</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">37,46%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>62</td>
+          <td>61510020</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">37,43%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>63</td>
+          <td>42980500</td>
+          <td>cota</td>
+          <td class="numero">2018</td>
+          <td class="numero">32,08%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        <tr>
+          <td>64</td>
+          <td>60012110</td>
+          <td>cota</td>
+          <td class="numero">2024</td>
+          <td class="numero">28,22%</td>
+          <td class="numero">0</td>
+          <td>Reprovada (0)</td>
+        </tr>
+        </tbody>
+      </table>
+    </details>
+  </div>
+</div>
+<script>
+(function() {
+  var DADOS_ESTACOES = [{"ranking": 1, "codigo_estacao": "60359090", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 97.98, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 2, "codigo_estacao": "60927010", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 97.93, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 3, "codigo_estacao": "61568050", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 97.59, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 4, "codigo_estacao": "56933020", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 97.54, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 5, "codigo_estacao": "60855010", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 96.44, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 6, "codigo_estacao": "40850010", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 96.41, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 7, "codigo_estacao": "60150050", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 95.94, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 8, "codigo_estacao": "53511000", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 95.63, "pontuacao": 10, "faixa": "Ótima (10)"}, {"ranking": 9, "codigo_estacao": "40185010", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 94.26, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 10, "codigo_estacao": "61939000", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 92.85, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 11, "codigo_estacao": "42550900", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 92.78, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 12, "codigo_estacao": "61793990", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 92.48, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 13, "codigo_estacao": "54195040", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 92.04, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 14, "codigo_estacao": "61511900", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 91.91, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 15, "codigo_estacao": "60134000", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 91.83, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 16, "codigo_estacao": "02043133", "variavel_usada": "chuva", "ano_inicio_operacao": 2014, "percentual_medio": 91.3, "pontuacao": 9, "faixa": "Muito boa (9)"}, {"ranking": 17, "codigo_estacao": "02142097", "variavel_usada": "chuva", "ano_inicio_operacao": 2014, "percentual_medio": 89.3, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 18, "codigo_estacao": "58910001", "variavel_usada": "cota", "ano_inicio_operacao": 2014, "percentual_medio": 88.88, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 19, "codigo_estacao": "61176200", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 88.41, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 20, "codigo_estacao": "61305000", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 88.33, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 21, "codigo_estacao": "40053100", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 87.13, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 22, "codigo_estacao": "02142096", "variavel_usada": "chuva", "ano_inicio_operacao": 2014, "percentual_medio": 86.74, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 23, "codigo_estacao": "61135000", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 86.67, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 24, "codigo_estacao": "40710001", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 86.07, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 25, "codigo_estacao": "55660001", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 85.83, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 26, "codigo_estacao": "56860001", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 85.8, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 27, "codigo_estacao": "40100100", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 85.47, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 28, "codigo_estacao": "42690002", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 83.23, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 29, "codigo_estacao": "42970900", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 82.54, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 30, "codigo_estacao": "42255500", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 81.94, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 31, "codigo_estacao": "61271000", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 81.94, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 32, "codigo_estacao": "61060000", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 81.73, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 33, "codigo_estacao": "02044079", "variavel_usada": "chuva", "ano_inicio_operacao": 2014, "percentual_medio": 81.21, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 34, "codigo_estacao": "41210001", "variavel_usada": "cota", "ano_inicio_operacao": 2015, "percentual_medio": 80.87, "pontuacao": 8, "faixa": "Boa (8)"}, {"ranking": 35, "codigo_estacao": "54110003", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 77.76, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 36, "codigo_estacao": "43300001", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 77.55, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 37, "codigo_estacao": "02042051", "variavel_usada": "chuva", "ano_inicio_operacao": 2014, "percentual_medio": 77.4, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 38, "codigo_estacao": "41151001", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 74.64, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 39, "codigo_estacao": "42145499", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 73.6, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 40, "codigo_estacao": "40755000", "variavel_usada": "cota", "ano_inicio_operacao": 2014, "percentual_medio": 72.79, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 41, "codigo_estacao": "58921500", "variavel_usada": "cota", "ano_inicio_operacao": 2014, "percentual_medio": 71.21, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 42, "codigo_estacao": "40680001", "variavel_usada": "cota", "ano_inicio_operacao": 2014, "percentual_medio": 70.69, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 43, "codigo_estacao": "54501000", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 70.37, "pontuacao": 7, "faixa": "Regular (7)"}, {"ranking": 44, "codigo_estacao": "61370000", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 69.61, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 45, "codigo_estacao": "60850001", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 68.99, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 46, "codigo_estacao": "42251001", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 68.95, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 47, "codigo_estacao": "56083000", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 68.42, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 48, "codigo_estacao": "40712500", "variavel_usada": "cota", "ano_inicio_operacao": 2014, "percentual_medio": 66.77, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 49, "codigo_estacao": "43429997", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 66.35, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 50, "codigo_estacao": "42860020", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 65.56, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 51, "codigo_estacao": "60101100", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 64.33, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 52, "codigo_estacao": "41940001", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 64.22, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 53, "codigo_estacao": "41955000", "variavel_usada": "cota", "ano_inicio_operacao": 2015, "percentual_medio": 64.11, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 54, "codigo_estacao": "56990020", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 61.94, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 55, "codigo_estacao": "41180001", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 60.56, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 56, "codigo_estacao": "54730006", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 58.62, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 57, "codigo_estacao": "44252000", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 57.66, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 58, "codigo_estacao": "55610001", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 56.71, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 59, "codigo_estacao": "41075003", "variavel_usada": "cota", "ano_inicio_operacao": 2017, "percentual_medio": 56.57, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 60, "codigo_estacao": "61260000", "variavel_usada": "cota", "ano_inicio_operacao": 2016, "percentual_medio": 44.31, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 61, "codigo_estacao": "40974900", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 37.46, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 62, "codigo_estacao": "61510020", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 37.43, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 63, "codigo_estacao": "42980500", "variavel_usada": "cota", "ano_inicio_operacao": 2018, "percentual_medio": 32.08, "pontuacao": 0, "faixa": "Reprovada (0)"}, {"ranking": 64, "codigo_estacao": "60012110", "variavel_usada": "cota", "ano_inicio_operacao": 2024, "percentual_medio": 28.22, "pontuacao": 0, "faixa": "Reprovada (0)"}];
+  var CORES = {10: "#0ca30c", 9: "#52c90de5", 8: "#fab219", 7: "#ec835a", 0: "#d03b3b"};
+  var LARGURA_MAX_PX = 380;
+
+  // estado dos filtros -- compartilhado entre a lista de barras e a tabela
+  // (V5). "ordem" (maior/menor) e o "estadoTabela" (coluna/direção de
+  // ordenação por clique no cabeçalho) ficam separados de propósito: são
+  // dois jeitos diferentes de ordenar a MESMA lista já filtrada.
+  var estado = { variavel: "todas", ano: "todas", faixasAtivas: {}, ordem: "desc" };
+  var estadoTabela = { campo: "ranking", direcao: "asc" };
+
+  var listaEl = document.getElementById("lista-estacoes");
+  var contadorEl = document.getElementById("contador-estacoes");
+  var seletorVariavel = document.getElementById("filtro-variavel");
+  var seletorAno = document.getElementById("filtro-ano");
+  var botaoOrdem = document.getElementById("botao-ordem");
+  var botaoLimpar = document.getElementById("botao-limpar");
+  var tiles = document.querySelectorAll(".tile-status");
+  var corpoTabela = document.getElementById("corpo-tabela");
+  var cabecalhosOrdenaveis = document.querySelectorAll("th.th-ordenavel");
+
+  function formatarPercentual(v) {
+    return v.toFixed(2).replace(".", ",") + "%";
+  }
+
+  function algumFiltroDeFaixaAtivo() {
+    for (var chave in estado.faixasAtivas) {
+      if (estado.faixasAtivas[chave]) return true;
+    }
+    return false;
+  }
+
+  // Filtro único usado tanto pela lista de barras quanto pela tabela --
+  // garante que as duas visões sempre mostrem o mesmo conjunto de estações.
+  function aplicarFiltros() {
+    return DADOS_ESTACOES.filter(function(d) {
+      if (estado.variavel !== "todas" && d.variavel_usada !== estado.variavel) return false;
+      if (estado.ano !== "todas" && String(d.ano_inicio_operacao) !== estado.ano) return false;
+      if (algumFiltroDeFaixaAtivo() && !estado.faixasAtivas[d.pontuacao]) return false;
+      return true;
+    });
+  }
+
+  function popularFiltroAno() {
+    var anos = [];
+    DADOS_ESTACOES.forEach(function(d) {
+      if (anos.indexOf(d.ano_inicio_operacao) === -1) anos.push(d.ano_inicio_operacao);
+    });
+    anos.sort(function(a, b) { return a - b; });
+    anos.forEach(function(ano) {
+      var opcao = document.createElement("option");
+      opcao.value = String(ano);
+      opcao.textContent = String(ano);
+      seletorAno.appendChild(opcao);
+    });
+  }
+
+  function criarLinha(dado, posicao) {
+    var linha = document.createElement("div");
+    linha.className = "linha-estacao";
+    linha.tabIndex = 0;
+    linha.setAttribute("role", "listitem");
+    linha.setAttribute(
+      "data-tooltip",
+      "Estação " + dado.codigo_estacao + " — " + formatarPercentual(dado.percentual_medio) +
+      " de disponibilidade de " + dado.variavel_usada + " — pontuação " + dado.pontuacao +
+      " (" + dado.faixa + ") — em operação desde " + dado.ano_inicio_operacao
+    );
+
+    var rotulo = document.createElement("span");
+    rotulo.className = "rotulo-estacao";
+    var principal = document.createElement("span");
+    principal.className = "rotulo-principal";
+    principal.textContent = "#" + posicao + " · " + dado.codigo_estacao;
+    var secundario = document.createElement("span");
+    secundario.className = "rotulo-secundario";
+    secundario.textContent = dado.variavel_usada + " · desde " + dado.ano_inicio_operacao;
+    rotulo.appendChild(principal);
+    rotulo.appendChild(secundario);
+
+    var trilha = document.createElement("span");
+    trilha.className = "trilha-barra";
+    var barra = document.createElement("span");
+    barra.className = "barra";
+    barra.style.width = Math.max(3, Math.round((dado.percentual_medio / 100) * LARGURA_MAX_PX)) + "px";
+    barra.style.background = CORES[dado.pontuacao];
+    trilha.appendChild(barra);
+
+    var valor = document.createElement("span");
+    valor.className = "valor-barra";
+    valor.textContent = formatarPercentual(dado.percentual_medio) + " ";
+    var valorSecundario = document.createElement("span");
+    valorSecundario.className = "valor-secundario";
+    valorSecundario.textContent = "(" + dado.pontuacao + ")";
+    valor.appendChild(valorSecundario);
+
+    linha.appendChild(rotulo);
+    linha.appendChild(trilha);
+    linha.appendChild(valor);
+    return linha;
+  }
+
+  function renderizar() {
+    var filtrados = aplicarFiltros();
+
+    filtrados.sort(function(a, b) {
+      var diferenca = a.percentual_medio - b.percentual_medio;
+      return estado.ordem === "desc" ? -diferenca : diferenca;
+    });
+
+    listaEl.textContent = "";
+    filtrados.forEach(function(dado, indice) {
+      listaEl.appendChild(criarLinha(dado, indice + 1));
+    });
+
+    contadorEl.textContent = "Mostrando " + filtrados.length + " de " + DADOS_ESTACOES.length + " estações";
+  }
+
+  function compararValores(a, b, campo) {
+    var va = a[campo];
+    var vb = b[campo];
+    if (typeof va === "number" && typeof vb === "number") return va - vb;
+    return String(va).localeCompare(String(vb), "pt-BR");
+  }
+
+  function criarLinhaTabela(dado) {
+    var tr = document.createElement("tr");
+    var celulas = [
+      { texto: String(dado.ranking), numero: false },
+      { texto: dado.codigo_estacao, numero: false },
+      { texto: dado.variavel_usada, numero: false },
+      { texto: String(dado.ano_inicio_operacao), numero: true },
+      { texto: formatarPercentual(dado.percentual_medio), numero: true },
+      { texto: String(dado.pontuacao), numero: true },
+      { texto: dado.faixa, numero: false }
+    ];
+    celulas.forEach(function(c) {
+      var td = document.createElement("td");
+      if (c.numero) td.className = "numero";
+      td.textContent = c.texto;
+      tr.appendChild(td);
+    });
+    return tr;
+  }
+
+  function atualizarSetasOrdenacao() {
+    cabecalhosOrdenaveis.forEach(function(th) {
+      var seta = th.querySelector(".seta-ordenacao");
+      var campo = th.getAttribute("data-campo");
+      seta.textContent = campo === estadoTabela.campo
+        ? (estadoTabela.direcao === "asc" ? "▲" : "▼")
+        : "";
+    });
+  }
+
+  function renderTabela() {
+    var filtrados = aplicarFiltros();
+    filtrados.sort(function(a, b) {
+      var resultado = compararValores(a, b, estadoTabela.campo);
+      return estadoTabela.direcao === "asc" ? resultado : -resultado;
+    });
+
+    corpoTabela.textContent = "";
+    filtrados.forEach(function(dado) {
+      corpoTabela.appendChild(criarLinhaTabela(dado));
+    });
+    atualizarSetasOrdenacao();
+  }
+
+  seletorVariavel.addEventListener("change", function() {
+    estado.variavel = seletorVariavel.value;
+    renderizar();
+    renderTabela();
+  });
+
+  seletorAno.addEventListener("change", function() {
+    estado.ano = seletorAno.value;
+    renderizar();
+    renderTabela();
+  });
+
+  tiles.forEach(function(tile) {
+    tile.addEventListener("click", function() {
+      var pontos = tile.getAttribute("data-pontuacao");
+      var ativo = tile.getAttribute("aria-pressed") === "true";
+      estado.faixasAtivas[pontos] = !ativo;
+      tile.setAttribute("aria-pressed", String(!ativo));
+      renderizar();
+      renderTabela();
+    });
+  });
+
+  botaoOrdem.addEventListener("click", function() {
+    estado.ordem = estado.ordem === "desc" ? "asc" : "desc";
+    botaoOrdem.textContent = estado.ordem === "desc" ? "Maior → menor ▾" : "Menor → maior ▴";
+    renderizar();
+  });
+
+  cabecalhosOrdenaveis.forEach(function(th) {
+    th.addEventListener("click", function() {
+      var campo = th.getAttribute("data-campo");
+      if (estadoTabela.campo === campo) {
+        estadoTabela.direcao = estadoTabela.direcao === "asc" ? "desc" : "asc";
+      } else {
+        estadoTabela.campo = campo;
+        estadoTabela.direcao = "asc";
+      }
+      renderTabela();
+    });
+  });
+
+  botaoLimpar.addEventListener("click", function() {
+    estado.variavel = "todas";
+    estado.ano = "todas";
+    estado.ordem = "desc";
+    estado.faixasAtivas = {};
+    seletorVariavel.value = "todas";
+    seletorAno.value = "todas";
+    botaoOrdem.textContent = "Maior → menor ▾";
+    tiles.forEach(function(t) { t.setAttribute("aria-pressed", "false"); });
+    renderizar();
+    renderTabela();
+  });
+
+  popularFiltroAno();
+  renderizar();
+  renderTabela();
+})();
+</script>
+</body>
+</html>
