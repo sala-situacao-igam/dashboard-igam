@@ -1,0 +1,182 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hidrologia — Consistência por estação</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#192e43;font:15px system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:30px}h1{margin:0 0 8px;font-size:29px}p{color:#5b6d7c;margin:8px 0 18px}.controls{display:flex;gap:20px;flex-wrap:wrap;align-items:end;margin:25px 0}label{display:flex;flex-direction:column;gap:7px;font-weight:600}select,input,button{font:inherit;padding:10px 14px;border:1px solid #b9c8d4;border-radius:7px;background:white;color:#192e43}button{cursor:pointer}select{min-width:200px}.cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}.card{padding:14px 20px;background:white;border-radius:10px;min-width:180px}.card strong{display:block;font-size:24px;margin-top:3px}.panel{background:white;border:1px solid #dae2e9;border-radius:12px;padding:22px;margin:18px 0}h2{font-size:19px;margin:0 0 6px}.legend{display:flex;gap:24px;font-size:13px;margin:12px 0}.line{display:inline-block;width:13px;height:13px;background:#637991;vertical-align:middle;margin-right:6px}.dot{display:inline-block;width:13px;height:13px;background:#008f83;vertical-align:middle;margin-right:6px}.plot{height:330px;position:relative}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}.selection{position:absolute;top:27px;bottom:48px;background:#008f8326;border-left:1px solid #008f83;border-right:1px solid #008f83;pointer-events:none;display:none}.tip{position:absolute;pointer-events:none;background:#142b40;color:white;border-radius:7px;padding:10px;white-space:pre-line;font-size:12px;display:none;z-index:2}.note{font-size:12px;color:#627482;line-height:1.6}#empty{display:none;padding:15px;background:#fff1d7;border-radius:8px}@media(max-width:600px){main{padding:14px}.panel{padding:12px}.plot{height:300px}}
+</style><style>
+  .nav-site {
+    display: flex;
+    gap: 4px;
+    padding: 14px 20px 0;
+    max-width: 920px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.85rem;
+  }
+  .nav-site a {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #52514e;
+  }
+  .nav-site a:hover { background: #e1e0d9; }
+  .nav-site a[data-pagina="hidrometria"] {
+    background: #0b0b0b;
+    color: #fff;
+    font-weight: 600;
+  }
+</style>
+<style>
+  .subnav-site {
+    display: flex;
+    gap: 0;
+    padding: 10px 20px 0;
+    max-width: 920px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+  }
+  .subnav-site a {
+    padding: 5px 12px;
+    text-decoration: none;
+    color: #52514e;
+    border: 1px solid #c3c2b7;
+    background: transparent;
+  }
+  .subnav-site a:first-child { border-radius: 6px 0 0 6px; }
+  .subnav-site a:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+  .subnav-site a:hover { background: #e1e0d9; }
+  .subnav-site a[aria-current="page"] {
+    background: #52514e;
+    border-color: #52514e;
+    color: #fff;
+    font-weight: 600;
+  }
+  /* Modo escuro do navegador: a nav principal (nav_site.py) e esta
+     sub-navegação ganham cores próprias -- sem isso o botão ativo da nav
+     principal (fundo #0b0b0b) some no fundo escuro. Vem depois do CSS de
+     nav_site.py, então sobrescreve com a mesma especificidade. */
+  @media (prefers-color-scheme: dark) {
+    .nav-site a { color: #c3c2b7; }
+    .nav-site a:hover { background: #2c2c2a; }
+    .nav-site a[data-pagina="hidrometria"] { background: #fff; color: #0b0b0b; }
+    .subnav-site a { color: #c3c2b7; border-color: #4b4b47; }
+    .subnav-site a:hover { background: #2c2c2a; }
+    .subnav-site a[aria-current="page"] { background: #c3c2b7; border-color: #c3c2b7; color: #0b0b0b; }
+  }
+</style>
+</head><body>
+<nav class="nav-site">
+  <a href="hidrometria.html" data-pagina="hidrometria">Hidrologia</a>
+  <a href="meteorologia.html" data-pagina="meteorologia">Meteorologia</a>
+</nav>
+<nav class="subnav-site" aria-label="Visão">
+  <a href="hidrometria.html" data-visao="serie">Série histórica</a>
+  <a href="hidrometria_cg.html" data-visao="cg">Contrato de Gestão</a>
+  <a href="hidrometria_consistencia.html" data-visao="consistencia" aria-current="page">Consistência por Estação</a>
+</nav>
+<main><h1>Hidrologia — Consistência por estação</h1><p>Precipitação e nível, por estação, desde 01/07/2026 · aprovado = passou no teste de consistência do indicador 2.8</p>
+<div class="controls"><label>Estação<select id="station"></select></label><label>Variável<select id="variable"><option value="chuva">Precipitação</option><option value="nivel">Nível</option></select></label><label>Data inicial<input id="start" type="date"></label><label>Data final<input id="end" type="date"></label><button id="reset">Período completo</button><button id="undozoom">Desfazer zoom</button></div>
+<div class="cards"><div class="card">Registros brutos<strong id="total"></strong></div><div class="card"><span id="label1">Aprovados</span><strong id="approved"></strong></div><div class="card" id="card2"><span id="label2">Após persistência</span><strong id="approved2"></strong></div><div class="card">Valores ausentes<strong id="missing"></strong></div></div><div id="empty">Nenhum registro neste intervalo. Ajuste as datas.</div>
+<section class="panel"><h2 id="title">Distribuição temporal</h2><p class="note">Arraste para ampliar o intervalo nos dois gráficos. Use “Desfazer zoom” para voltar. Consulte valores com o cursor.</p><div class="legend"></div><div class="plot"><canvas id="rain" aria-label="Gráfico temporal de chuva"></canvas><div class="tip"></div><div class="selection"></div></div><p id="zero" class="note"></p></section>
+<section class="panel"><h2>Número de registros por dia</h2><p class="note">Contagem diária de registros com valor preenchido. As séries após os testes são contadas separadamente.</p><div class="legend"></div><div class="plot"><canvas id="counts" aria-label="Gráfico de registros por dia"></canvas><div class="tip"></div><div class="selection"></div></div></section>
+</main>
+
+<script id="manifesto" type="application/json">{"chuva":["02042051","02043133","02044079","02142096","02142097","40053100","40100100","40185010","40680001","40710001","40755000","40850010","40974900","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42435001","42550900","42690002","42860020","42970900","42980500","43300001","43429997","43669999","43675002","53511000","54195040","54501000","55610001","55660001","56083000","56933020","60012110","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"nivel":["40053100","40185010","40680001","40710001","40755000","40850010","41075003","41151001","41180001","41210001","42251001","42255500","42395001","42550900","42690002","42860020","42970900","43300001","43429997","43669999","43675002","54501000","55660001","56083000","56933020","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"rain_status":true,"rain_limit":1000,"level_label":"Nivel (unidade nao confirmada)","pasta_dados":"dados_consistencia/","nomes":{"02042051":"Ros\u00e1rio da Limeira","02043133":"Conselheiro Lafaiete","02044079":"Lagoa Dourada","02142096":"S\u00e3o Sebasti\u00e3o da Vargem Alegre","02142097":"Mirai","40053100":"Barra do Rio S\u00e3o Miguel","40100100":"Barra do Par\u00e1","40185010":"Pari","40680001":"Entre Rios de Minas","40710001":"Belo Vale","40712500":"Bonfim","40755000":"Crucil\u00e2ndia","40850010":"Ponte da Taquara","40974900":"Fazenda S\u00e3o Felix","41075003":"Porto Passarinho","41151001":"Fazenda Agua Limpa Jusante","41180001":"Itabirito Lin\u00edgrafo","41210001":"Caet\u00e9","41940001":"Ponte do Bicudo","41955000":"Lassance","42145499":"Fazenda Umburana Montante","42251001":"Fazenda C\u00f3rrego do Ouro","42255500":"Santa Izabel","42550900":"Porto dos Po\u00e7\u00f5es","42690002":"Porto da Extrema","42860020":"Cachoeira do Pared\u00e3o","42970900":"Porto Alegre","42980500":"Barra do Rio - PTE013","43300001":"Fazenda Carvalho","43429997":"Arinos Montante","44252000":"Usina do Pandeiros Jusante","53511000":"Barra do Mosquito","54110003":"Fazenda Jambeiro - Gr\u00e3o Mogol","54193050":"Rubelita","54195040":"Barra do Salinas","54501000":"Ara\u00e7ua\u00ed","54730006":"Fazenda Boa Sorte Jusante","54770100":"Fazenda Cajueiro","55610001":"Francisco S\u00e1","55660001":"S\u00e3o Pedro do Pamp\u00e3","56083000":"Vi\u00e7osa Hidro","56860001":"S\u00e3o Pedro do Sua\u00e7u\u00ed","56933020":"Barra do Cuiet\u00e9 Jusante","56988550":"Ipanema","56990020":"S\u00e3o Sebasti\u00e3o da Encruzilhada","58910001":"Fazenda Umba\u00fabas","58921500":"Eugen\u00f3polis","60012110":"Ponte Vicent Goulart Jusante","60101100":"Abadia dos Dourados","60134000":"Barra do Perdizes","60150050":"Estrela do Sul","60359090":"Araguari","60850001":"Fazenda Buriti do Prata","60855010":"Ponte do Prata","60927010":"Ponte S\u00e3o Domingos","61060000":"Fazenda Laranjeiras","61135000":"Ibituruna","61176200":"Barra do Rio do Cervo","61260000":"Bicas","61271000":"Itajub\u00e1","61305000":"Santa Rita do Sapuca\u00ed","61370000":"Ponte dos Rodrigues","61510020":"Tr\u00eas Cora\u00e7\u00f5es","61511900":"Ch\u00e1cara Santana","61568050":"Machado","61793990":"Uberaba","61939000":"Barra Rio S\u00e3o Francisco","42395001":"Santa Rosa","42435001":"Fazenda Barra da \u00c9gua","43669999":"Vila Urucuia","43675002":"Fazenda Concei\u00e7\u00e3o"}}</script><script>
+const MANIFEST=JSON.parse(document.getElementById('manifesto').textContent), $=id=>document.getElementById(id), DAY=86400000;
+const CACHE={chuva:{},nivel:{}};
+async function carregar(modo,estacao){
+  if(!estacao||CACHE[modo][estacao])return;
+  $('title').textContent='Carregando...';
+  try{const r=await fetch(MANIFEST.pasta_dados+modo+'_'+estacao+'.json');CACHE[modo][estacao]=r.ok?await r.json():[]}
+  catch(e){CACHE[modo][estacao]=[]}
+}
+let zoomRange=null, zoomHistory=[];
+const date=t=>new Date(t).toISOString().slice(0,10), fmt=t=>new Date(t).toLocaleDateString('pt-BR',{timeZone:'UTC'}), num=v=>v==null?'Ausente':v.toLocaleString('pt-BR',{maximumFractionDigits:4});
+const colors=['#d32f2f','#008f83','#dd8a20'];
+function seriesColor(i){return mode()==='nivel'&&i>0?colors[i===1?2:1]:colors[i]}
+function mode(){return $('variable').value||'chuva'}
+function names(){return mode()==='chuva'?['Bruto','Aprovado']:['Bruto','Após range','Após persistência']}
+function source(){return (CACHE[mode()]||{})[$('station').value]||[]}
+async function fillStations(){const prev=$('station').value;$('station').innerHTML='';const codigos=(MANIFEST[mode()]||[]).slice().sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));for(const code of codigos){const o=document.createElement('option');o.value=code;o.textContent=code+(MANIFEST.nomes[code]?(' — '+MANIFEST.nomes[code]):'');$('station').append(o)}$('station').value=codigos.includes(prev)?prev:(codigos[0]||'');await reset()}
+async function reset(){zoomRange=null;zoomHistory=[];await carregar(mode(),$('station').value);const r=source();if(r.length){$('start').value=date(r[0][0]);$('end').value=date(r[r.length-1][0])}render()}
+function render(){const level=mode()==='nivel';let lo=zoomRange?zoomRange[0]:Date.parse($('start').value),hi=zoomRange?zoomRange[1]:Date.parse($('end').value)+DAY-1;
+const raw=source().filter(r=>r[0]>=lo&&r[0]<=hi), rows=raw.map(r=>[r[0],r[1],r[1]!=null&&r[2]?r[1]:null,...(level?[r[1]!=null&&r[3]?r[1]:null]:[])]);
+const n=rows.filter(r=>r[1]!=null).length,a=rows.filter(r=>r[2]!=null).length,b=level?rows.filter(r=>r[3]!=null).length:0;
+$('total').textContent=num(n);$('approved').textContent=(!level&&!MANIFEST.rain_status)?'Indisponível':num(a);$('approved2').textContent=num(b);$('label1').textContent=level?'Após range':'Aprovados';$('label2').textContent='Após persistência';$('card2').style.display=level?'block':'none';$('missing').textContent=num(raw.length-n);$('empty').style.display=n?'none':'block';$('empty').textContent='Sem valores preenchidos para esta variável no intervalo selecionado.';
+$('title').textContent=level?'Distribuição temporal do nível':'Distribuição temporal da precipitação';
+const labels=names();for(const legend of document.querySelectorAll('.legend'))legend.innerHTML=labels.map((v,i)=>'<span><i style="display:inline-block;width:12px;height:12px;background:'+seriesColor(i)+';margin-right:6px"></i>'+v+'</span>').join('');
+const vals=rows.filter(r=>r[1]!=null&&(level||r[1]<=MANIFEST.rain_limit));$('zero').textContent=vals.length&&vals.every(r=>r[1]===0)?'Todos os valores disponíveis são zero; barras de altura zero não aparecem.':'';
+// Contagem: o zoom não transforma um dia parcialmente visível em dia incompleto.
+const days=new Map();if(Number.isFinite(lo)&&Number.isFinite(hi)&&lo<=hi)for(let t=Math.floor(lo/DAY)*DAY;t<=hi;t+=DAY)days.set(t,[t,0,0,...(level?[0]:[])]);
+for(const r of source()){const t=Math.floor(r[0]/DAY)*DAY,b=days.get(t);if(b&&r[1]!=null){b[1]++;if(r[2])b[2]++;if(level&&r[3])b[3]++}}
+const plotted=rows.map(r=>!level&&r[1]!=null&&r[1]>MANIFEST.rain_limit?[r[0],null,null]:r);
+draw('rain',plotted,lo,hi,false);draw('counts',[...days.values()],Math.floor(lo/DAY)*DAY,Math.floor(hi/DAY)*DAY+DAY-1,true)}
+// Escala recalculada com os dados visíveis em cada zoom/filtro.
+function axisBounds(rows,count,lineChart){
+    let low=Infinity,high=-Infinity;
+    for(const r of rows)for(let j=1;j<r.length;j++){
+        const v=r[j];if(v!=null&&Number.isFinite(v)){low=Math.min(low,v);high=Math.max(high,v)}
+    }
+    if(!Number.isFinite(low))return {mn:0,mx:1,step:count?1:.2};
+    if(lineChart){
+        const span=high-low;
+        const margin=span>0?span*.08:Math.max(Math.abs(high)*.005,.1);
+        low-=margin;high+=margin;
+    }else{
+        // Barras conservam a origem em zero para não distorcer as alturas.
+        low=Math.min(0,low);high=Math.max(0,high);
+        const span=(high-low)||1;high+=span*.08;if(low<0)low-=span*.08;
+    }
+    const target=(high-low)/5;
+    const magnitude=10**Math.floor(Math.log10(target));
+    const factor=[1,2,2.5,5,10].find(f=>f*magnitude>=target);
+    let step=factor*magnitude;if(count)step=Math.max(1,Math.ceil(step));
+    const mn=Math.floor(low/step)*step,mx=Math.ceil(high/step)*step;
+    return {mn,mx:mx>mn?mx:mn+step,step};
+}
+function draw(id,rows,lo,hi,count){const c=$(id),tip=c.nextElementSibling,rect=c.getBoundingClientRect(),w=rect.width,h=rect.height,dpr=devicePixelRatio||1;c.width=w*dpr;c.height=h*dpr;const ctx=c.getContext('2d');ctx.scale(dpr,dpr);const bounds=axisBounds(rows,count,mode()==='nivel'&&!count);let {mn,mx,step}=bounds;const L=64,R=18,T=27,B=48,pw=w-L-R,ph=h-T-B;if(!Number.isFinite(lo)||!Number.isFinite(hi)||hi<=lo){lo=0;hi=1}const x=t=>L+(t-lo)/(hi-lo)*pw,y=v=>T+ph-(v-mn)/(mx-mn)*ph;ctx.font='12px system-ui';ctx.fillStyle='#526879';ctx.fillText(count?'Registros / dia':(mode()==='nivel'?MANIFEST.level_label:'Precipitação (mm)'),L,15);const ticks=Math.round((mx-mn)/step);for(let i=0;i<=ticks;i++){let v=mn+(mx-mn)*i/ticks;if(count)v=Math.round(v);const yy=y(v);ctx.strokeStyle='#e6edf2';ctx.beginPath();ctx.moveTo(L,yy);ctx.lineTo(w-R,yy);ctx.stroke();ctx.textAlign='right';ctx.fillText(num(v),L-9,yy+4)}const off=count?DAY/2:0,by=T+ph;ctx.strokeStyle='#c9d4dc';ctx.fillStyle='#526879';
+// Eixo X: no gráfico diário, um rótulo único por dia, centralizado sob a barra; com muitos dias, pula rótulos para não sobrepor.
+if(count){const nd=rows.length,slot=nd?pw/nd:pw,skip=Math.max(1,Math.ceil(80/slot));ctx.textAlign='center';for(let i=0;i<nd;i+=skip){const cx=x(rows[i][0]+off);ctx.beginPath();ctx.moveTo(cx,by);ctx.lineTo(cx,by+4);ctx.stroke();ctx.fillText(fmt(rows[i][0]),Math.max(L-20,Math.min(w-36,cx)),by+20)}}
+else{const nt=w<650?3:6,short=hi-lo<=2*DAY,seen=new Set();for(let i=0;i<nt;i++){const t=lo+(hi-lo)*i/(nt-1),lab=fmt(t)+(short?' '+new Date(t).toISOString().slice(11,16):'');if(seen.has(lab))continue;seen.add(lab);ctx.textAlign=i===0?'left':(i===nt-1?'right':'center');ctx.fillText(lab,x(t),h-18)}}
+ctx.save();ctx.beginPath();ctx.rect(L,T,pw,ph);ctx.clip();
+// Barras sobrepostas: bruto largo ao fundo, aprovado estreito à frente.
+const intervals=[];for(let i=1;i<rows.length;i++){const delta=rows[i][0]-rows[i-1][0];if(delta>0)intervals.push(delta)}intervals.sort((a,b)=>a-b);
+const interval=count?DAY:(intervals.length?intervals[Math.floor(intervals.length/2)]:900000);
+const barWidth=Math.max(0.8,Math.min(36,interval/(hi-lo)*pw*.8));
+const base=y(0);
+function bar(t,v,width,color){if(v==null)return;const top=y(v);ctx.fillStyle=color;ctx.fillRect(x(t+off)-width/2,Math.min(top,base),width,Math.abs(base-top))}
+if(mode()==='nivel'&&!count){
+    // Interrompe a linha nos valores ausentes, nos filtros e nas lacunas temporais.
+    for(let series=1;series<=names().length;series++){
+        ctx.strokeStyle=seriesColor(series-1);ctx.lineWidth=[2.6,1.9,1.2][series-1];
+        ctx.beginPath();let previous=null;
+        for(const r of rows){
+            const v=r[series];if(v==null){previous=null;continue}
+            if(previous&&r[0]-previous[0]<=interval*1.5){ctx.lineTo(x(r[0]),y(v))}
+            else{ctx.moveTo(x(r[0]),y(v))}
+            previous=r;
+        }
+        ctx.stroke();
+        // Preserva observações isoladas entre lacunas, que não formam segmentos.
+        ctx.fillStyle=seriesColor(series-1);
+        for(let i=0;i<rows.length;i++){
+            const r=rows[i];if(r[series]==null)continue;
+            const prev=rows[i-1],next=rows[i+1];
+            const left=prev&&prev[series]!=null&&r[0]-prev[0]<=interval*1.5;
+            const right=next&&next[series]!=null&&next[0]-r[0]<=interval*1.5;
+            if(!left&&!right){ctx.beginPath();ctx.arc(x(r[0]),y(r[series]),2,0,Math.PI*2);ctx.fill()}
+        }
+    }
+}else{
+    for(let series=1;series<=names().length;series++){const fraction=series===1?1:(series===2?.64:.30);for(const r of rows)bar(r[0],r[series],barWidth*fraction,seriesColor(series-1))}
+}
+ctx.restore();
+c.onmousemove=e=>{if(dragStart!==null||!rows.length)return;const px=e.offsetX,t=lo+(px-L)/pw*(hi-lo)-off;let low=0,high=rows.length-1;while(low<high){const mid=(low+high)>>1;if(rows[mid][0]<t)low=mid+1;else high=mid}let idx=low;if(idx>0&&Math.abs(rows[idx-1][0]-t)<Math.abs(rows[idx][0]-t))idx--;const r=rows[idx];tip.textContent=(count?fmt(r[0]):fmt(r[0])+' '+new Date(r[0]).toISOString().slice(11,16))+'\n'+names().map((label,i)=>label+': '+(r[i+1]==null?'Sem valor nesta série':num(r[i+1]))).join('\n');tip.style.display='block';tip.style.left=Math.max(0,Math.min(px+12,w-205))+'px';tip.style.top=Math.max(0,e.offsetY-70)+'px'};c.onmouseleave=()=>tip.style.display='none';tip.style.display='none';
+let dragStart=null;const selection=tip.nextElementSibling;
+const localX=e=>Math.max(L,Math.min(w-R,e.clientX-c.getBoundingClientRect().left));
+c.onpointerdown=e=>{if(e.button!==0||!rows.length)return;dragStart=localX(e);tip.style.display='none';c.setPointerCapture(e.pointerId);selection.style.left=dragStart+'px';selection.style.width='0px';selection.style.display='block'};
+c.onpointermove=e=>{if(dragStart===null)return;const end=localX(e);selection.style.left=Math.min(dragStart,end)+'px';selection.style.width=Math.abs(end-dragStart)+'px'};
+c.onpointerup=e=>{if(dragStart===null)return;const end=localX(e),begin=dragStart;dragStart=null;selection.style.display='none';c.releasePointerCapture(e.pointerId);if(Math.abs(end-begin)<8)return;zoomHistory.push(zoomRange?zoomRange.slice():null);zoomRange=[lo+(Math.min(begin,end)-L)/pw*(hi-lo),lo+(Math.max(begin,end)-L)/pw*(hi-lo)];render()};
+c.onpointercancel=()=>{dragStart=null;selection.style.display='none'};
+}
+$('station').onchange=reset;$('variable').onchange=fillStations;const datesChanged=()=>{zoomRange=null;zoomHistory=[];render()};$('start').onchange=datesChanged;$('end').onchange=datesChanged;$('undozoom').onclick=()=>{zoomRange=zoomHistory.length?zoomHistory.pop():null;render()};$('reset').onclick=reset;let timer;window.onresize=()=>{clearTimeout(timer);timer=setTimeout(render,100)};fillStations();
+</script></body></html>
