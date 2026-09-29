@@ -1,7 +1,149 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Hidrologia — Consistência por estação</title>
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Hidrologia — Consistência por estação</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f2f5f8;color:#192e43;font:15px system-ui,sans-serif}main{max-width:1440px;margin:auto;padding:30px}h1{margin:0 0 8px;font-size:29px}p{color:#5b6d7c;margin:8px 0 18px}.controls{display:flex;gap:20px;flex-wrap:wrap;align-items:end;margin:25px 0}label{display:flex;flex-direction:column;gap:7px;font-weight:600}select,input,button{font:inherit;padding:10px 14px;border:1px solid #b9c8d4;border-radius:7px;background:white;color:#192e43}button{cursor:pointer}select{min-width:200px}.cards{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}.card{padding:14px 20px;background:white;border-radius:10px;min-width:180px}.card strong{display:block;font-size:24px;margin-top:3px}.panel{background:white;border:1px solid #dae2e9;border-radius:12px;padding:22px;margin:18px 0}h2{font-size:19px;margin:0 0 6px}.legend{display:flex;gap:24px;font-size:13px;margin:12px 0}.line{display:inline-block;width:13px;height:13px;background:#637991;vertical-align:middle;margin-right:6px}.dot{display:inline-block;width:13px;height:13px;background:#008f83;vertical-align:middle;margin-right:6px}.plot{height:330px;position:relative}canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}.selection{position:absolute;top:27px;bottom:48px;background:#008f8326;border-left:1px solid #008f83;border-right:1px solid #008f83;pointer-events:none;display:none}.tip{position:absolute;pointer-events:none;background:#142b40;color:white;border-radius:7px;padding:10px;white-space:pre-line;font-size:12px;display:none;z-index:2}.note{font-size:12px;color:#627482;line-height:1.6}#empty{display:none;padding:15px;background:#fff1d7;border-radius:8px}@media(max-width:600px){main{padding:14px}.panel{padding:12px}.plot{height:300px}}
-</style><style>
+:root{
+  --surface:#fcfcfb; --page:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --grid:#e1e0d9; --border:rgba(11,11,11,.10); --accent:#1c3f66;
+  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3;
+  --aviso-bg:#fff4d6; --aviso-ink:#5a4300; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
+    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+    --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
+  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+  --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
+.pagina{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+/* alinha a nav principal e as sub-abas (nav_site/nav_cg usam 920px) à largura da grade */
+body .nav-site, body .subnav-site{max-width:1280px}
+.cabecalho{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:6px 0 14px}
+.cabecalho h1{font-size:1.25rem;margin:0}
+.cabecalho p{margin:0;color:var(--ink-2);font-size:.85rem}
+.aviso{background:var(--aviso-bg);color:var(--aviso-ink);border-radius:8px;padding:8px 12px;font-size:.8rem;margin-bottom:12px}
+
+/* faixa de KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.kpi-rotulo{margin:0;color:var(--ink-2);font-size:.78rem;font-weight:600}
+.kpi-valor{margin:4px 0 0;font-size:2rem;font-weight:600;line-height:1.1}
+.kpi-valor small{font-size:.9rem;color:var(--ink-3);font-weight:400;margin-left:2px}
+.kpi-pct{margin:2px 0 8px;color:var(--ink-2);font-size:.78rem}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.chip-icone{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;color:#fff;font-size:.62rem}
+
+/* grade principal */
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cartao{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;min-width:0}
+.span2{grid-column:span 2}
+.cartao h2{font-size:.95rem;margin:0}
+.cartao .sub{margin:2px 0 12px;color:var(--ink-3);font-size:.75rem}
+.cartao-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
+
+/* seletor segmentado */
+.seg-ctrl{display:inline-flex;border:1px solid var(--grid);border-radius:7px;overflow:hidden}
+.seg-ctrl button{border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:.75rem;padding:4px 10px;cursor:pointer}
+.seg-ctrl button[aria-pressed="true"]{background:var(--ink-2);color:var(--surface);font-weight:600}
+
+/* 2.2: filtros + ranking em janela */
+.dois-paineis{display:grid;grid-template-columns:200px minmax(0,1fr);gap:14px}
+.faixas{display:flex;flex-direction:column;gap:6px}
+.faixa{display:flex;align-items:center;gap:8px;border:1px solid var(--grid);background:transparent;
+  border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.faixa[aria-pressed="true"]{border-color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--ink-2)}
+.faixa .qtd{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
+.faixa .rot{font-size:.78rem;color:var(--ink-2)}
+.resumo-faixas{font-size:.75rem;color:var(--ink-3);margin-top:6px}
+.janela{border:1px solid var(--grid);border-radius:8px;max-height:272px;overflow:auto}
+.janela table{width:100%;border-collapse:collapse;font-size:.78rem}
+.janela thead th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);
+  font-weight:600;padding:7px 8px;border-bottom:1px solid var(--grid);cursor:pointer;white-space:nowrap}
+.janela td{padding:5px 8px;border-bottom:1px solid var(--grid)}
+.janela td.num{text-align:right;font-variant-numeric:tabular-nums}
+.mini-barra{display:inline-block;height:6px;border-radius:0 3px 3px 0;background:var(--accent);vertical-align:middle;margin-right:6px}
+.contador{font-size:.72rem;color:var(--ink-3);margin-top:6px}
+
+/* 2.1 colunas */
+.colunas{display:flex;align-items:flex-end;gap:14px;height:170px;padding:0 6px;border-bottom:1px solid var(--grid)}
+.col-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.col-barra{width:24px;border-radius:4px 4px 0 0;min-height:1px}
+.col-valor{font-size:.8rem;font-weight:600;margin-bottom:4px}
+.col-rotulos{display:flex;gap:14px;padding:6px 6px 0}
+.col-rotulo{flex:1;font-size:.72rem;color:var(--ink-2);text-align:center}
+.nota-rodape{font-size:.72rem;color:var(--ink-3);margin:8px 0 0}
+
+/* 2.8 barras 100% */
+.barra100{margin-bottom:14px}
+.barra100-cab{display:flex;gap:10px;align-items:baseline;margin-bottom:5px;flex-wrap:wrap}
+.barra100-rotulo{font-weight:600;font-size:.82rem}
+.barra100-base{color:var(--ink-3);font-size:.72rem}
+.barra100-nota{margin-left:auto;font-size:.75rem;color:var(--ink-2);font-weight:600}
+.barra100-trilha{display:flex;gap:2px;height:22px}
+.barra100-trilha .seg{display:block;height:100%}
+.barra100-trilha .seg:first-child{border-radius:4px 0 0 4px}
+.barra100-trilha .seg:last-child{border-radius:0 4px 4px 0}
+.barra100-rotulos{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-2);margin-top:3px}
+.legenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--ink-2);margin:4px 0 12px}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.detalhes{margin-top:12px}
+.detalhes summary{cursor:pointer;font-size:.78rem;color:var(--ink-2);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px}
+.detalhes summary::-webkit-details-marker{display:none}
+.detalhes summary::before{content:"▸";display:inline-block;transition:transform .15s}
+.detalhes[open] summary::before{transform:rotate(90deg)}
+.lista-janela{border:1px solid var(--grid);border-radius:8px;max-height:150px;overflow:auto;margin-top:6px}
+.lista-janela table{width:100%;border-collapse:collapse;font-size:.74rem}
+.lista-janela th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);padding:5px 8px;border-bottom:1px solid var(--grid)}
+.lista-janela td{padding:4px 8px;border-bottom:1px solid var(--grid)}
+/* tooltip */
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:.72rem;
+  padding:5px 8px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:10;max-width:260px}
+
+@media (max-width:900px){
+  .grade{grid-template-columns:1fr}.span2{grid-column:auto}
+  .dois-paineis{grid-template-columns:1fr}.faixas{flex-direction:row;flex-wrap:wrap}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+.nota-pagina{margin:-8px 0 14px;color:var(--ink-3);font-size:.75rem}
+.controls{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin:0 0 12px;
+  background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.controls label{display:flex;flex-direction:column;gap:4px;font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.controls select,.controls input,.controls button{font:inherit;font-size:.82rem;padding:6px 10px;
+  border:1px solid var(--grid);border-radius:7px;background:var(--surface);color:var(--ink)}
+.controls input{color-scheme:inherit}
+.controls select{min-width:240px}
+.controls button{cursor:pointer;color:var(--ink-2)}
+.controls button:hover{background:var(--grid)}
+.kpis .kpi-valor{font-variant-numeric:tabular-nums}
+#empty{display:none;background:var(--aviso-bg);color:var(--aviso-ink);border-radius:8px;padding:8px 12px;font-size:.8rem;margin-bottom:12px}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin:0 0 12px;min-width:0}
+.panel h2{font-size:.95rem;margin:0}
+.note{margin:2px 0 8px;color:var(--ink-3);font-size:.75rem;line-height:1.5}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--ink-2);margin:4px 0 10px}
+/* ---- area dos graficos: identica a original ---- */
+.plot{height:330px;position:relative;background:#fff;border-radius:8px}
+canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
+.selection{position:absolute;top:27px;bottom:48px;background:#008f8326;border-left:1px solid #008f83;border-right:1px solid #008f83;pointer-events:none;display:none}
+.tip{position:absolute;pointer-events:none;background:#142b40;color:white;border-radius:7px;padding:10px;white-space:pre-line;font-size:12px;display:none;z-index:2}
+@media(max-width:600px){.pagina{padding:12px}.panel{padding:12px}.plot{height:300px}.controls select{min-width:0;width:100%}.controls label{flex:1 1 100%}}
+</style>
+<style>
   .nav-site {
     display: flex;
     gap: 4px;
@@ -63,23 +205,35 @@
     .subnav-site a[aria-current="page"] { background: #c3c2b7; border-color: #c3c2b7; color: #0b0b0b; }
   }
 </style>
-</head><body>
+</head>
+<body>
 <nav class="nav-site">
   <a href="hidrometria.html" data-pagina="hidrometria">Hidrologia</a>
   <a href="meteorologia.html" data-pagina="meteorologia">Meteorologia</a>
 </nav>
+
 <nav class="subnav-site" aria-label="Visão">
   <a href="hidrometria.html" data-visao="serie">Série histórica</a>
   <a href="hidrometria_cg.html" data-visao="cg">Contrato de Gestão</a>
   <a href="hidrometria_consistencia.html" data-visao="consistencia" aria-current="page">Consistência por Estação</a>
 </nav>
-<main><h1>Hidrologia — Consistência por estação</h1><p>Precipitação e nível, por estação, desde 01/07/2026 · aprovado = passou no teste de consistência do indicador 2.8</p>
-<div class="controls"><label>Estação<select id="station"></select></label><label>Variável<select id="variable"><option value="chuva">Precipitação</option><option value="nivel">Nível</option></select></label><label>Data inicial<input id="start" type="date"></label><label>Data final<input id="end" type="date"></label><button id="reset">Período completo</button><button id="undozoom">Desfazer zoom</button></div>
-<div class="cards"><div class="card">Registros brutos<strong id="total"></strong></div><div class="card"><span id="label1">Aprovados</span><strong id="approved"></strong></div><div class="card" id="card2"><span id="label2">Após persistência</span><strong id="approved2"></strong></div><div class="card">Valores ausentes<strong id="missing"></strong></div></div><div id="empty">Nenhum registro neste intervalo. Ajuste as datas.</div>
-<section class="panel"><h2 id="title">Distribuição temporal</h2><p class="note">Arraste para ampliar o intervalo nos dois gráficos. Use “Desfazer zoom” para voltar. Consulte valores com o cursor.</p><div class="legend"></div><div class="plot"><canvas id="rain" aria-label="Gráfico temporal de chuva"></canvas><div class="tip"></div><div class="selection"></div></div><p id="zero" class="note"></p></section>
-<section class="panel"><h2>Número de registros por dia</h2><p class="note">Contagem diária de registros com valor preenchido. As séries após os testes são contadas separadamente.</p><div class="legend"></div><div class="plot"><canvas id="counts" aria-label="Gráfico de registros por dia"></canvas><div class="tip"></div><div class="selection"></div></div></section>
-</main>
-
+<div class="pagina">
+  <div class="cabecalho">
+    <h1>Hidrologia — Consistência por estação</h1>
+    <p>Período: 01/07/2026 a 29/09/2026 · atualizado em 29/09/2026</p>
+  </div>
+  <p class="nota-pagina">Precipitação e nível, por estação · aprovado = passou no teste de consistência do indicador 2.8</p>
+  <div class="controls"><label>Estação<select id="station"></select></label><label>Variável<select id="variable"><option value="chuva">Precipitação</option><option value="nivel">Nível</option></select></label><label>Data inicial<input id="start" type="date"></label><label>Data final<input id="end" type="date"></label><button id="reset">Período completo</button><button id="undozoom">Desfazer zoom</button></div>
+  <section class="kpis" aria-label="Resumo da estação">
+    <div class="kpi"><p class="kpi-rotulo">Registros brutos</p><p class="kpi-valor" id="total"></p></div>
+    <div class="kpi"><p class="kpi-rotulo" id="label1">Aprovados</p><p class="kpi-valor" id="approved"></p></div>
+    <div class="kpi" id="card2"><p class="kpi-rotulo" id="label2">Após persistência</p><p class="kpi-valor" id="approved2"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Valores ausentes</p><p class="kpi-valor" id="missing"></p></div>
+  </section>
+  <div id="empty">Nenhum registro neste intervalo. Ajuste as datas.</div>
+  <section class="panel"><h2 id="title">Distribuição temporal</h2><p class="note">Arraste para ampliar o intervalo nos dois gráficos. Use “Desfazer zoom” para voltar. Consulte valores com o cursor.</p><div class="legend"></div><div class="plot"><canvas id="rain" aria-label="Gráfico temporal de chuva"></canvas><div class="tip"></div><div class="selection"></div></div><p id="zero" class="note"></p></section>
+  <section class="panel"><h2>Número de registros por dia</h2><p class="note">Contagem diária de registros com valor preenchido. As séries após os testes são contadas separadamente.</p><div class="legend"></div><div class="plot"><canvas id="counts" aria-label="Gráfico de registros por dia"></canvas><div class="tip"></div><div class="selection"></div></div></section>
+</div>
 <script id="manifesto" type="application/json">{"chuva":["02042051","02043133","02044079","02142096","02142097","40053100","40100100","40185010","40680001","40710001","40755000","40850010","40974900","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42435001","42550900","42690002","42860020","42970900","42980500","43300001","43429997","43669999","43675002","53511000","54195040","54501000","55610001","55660001","56083000","56933020","60012110","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"nivel":["40053100","40185010","40680001","40710001","40755000","40850010","41075003","41151001","41180001","41210001","42251001","42255500","42395001","42550900","42690002","42860020","42970900","43300001","43429997","43669999","43675002","54501000","55660001","56083000","56933020","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"rain_status":true,"rain_limit":1000,"level_label":"Nivel (unidade nao confirmada)","pasta_dados":"dados_consistencia/","nomes":{"02042051":"Ros\u00e1rio da Limeira","02043133":"Conselheiro Lafaiete","02044079":"Lagoa Dourada","02142096":"S\u00e3o Sebasti\u00e3o da Vargem Alegre","02142097":"Mirai","40053100":"Barra do Rio S\u00e3o Miguel","40100100":"Barra do Par\u00e1","40185010":"Pari","40680001":"Entre Rios de Minas","40710001":"Belo Vale","40712500":"Bonfim","40755000":"Crucil\u00e2ndia","40850010":"Ponte da Taquara","40974900":"Fazenda S\u00e3o Felix","41075003":"Porto Passarinho","41151001":"Fazenda Agua Limpa Jusante","41180001":"Itabirito Lin\u00edgrafo","41210001":"Caet\u00e9","41940001":"Ponte do Bicudo","41955000":"Lassance","42145499":"Fazenda Umburana Montante","42251001":"Fazenda C\u00f3rrego do Ouro","42255500":"Santa Izabel","42550900":"Porto dos Po\u00e7\u00f5es","42690002":"Porto da Extrema","42860020":"Cachoeira do Pared\u00e3o","42970900":"Porto Alegre","42980500":"Barra do Rio - PTE013","43300001":"Fazenda Carvalho","43429997":"Arinos Montante","44252000":"Usina do Pandeiros Jusante","53511000":"Barra do Mosquito","54110003":"Fazenda Jambeiro - Gr\u00e3o Mogol","54193050":"Rubelita","54195040":"Barra do Salinas","54501000":"Ara\u00e7ua\u00ed","54730006":"Fazenda Boa Sorte Jusante","54770100":"Fazenda Cajueiro","55610001":"Francisco S\u00e1","55660001":"S\u00e3o Pedro do Pamp\u00e3","56083000":"Vi\u00e7osa Hidro","56860001":"S\u00e3o Pedro do Sua\u00e7u\u00ed","56933020":"Barra do Cuiet\u00e9 Jusante","56988550":"Ipanema","56990020":"S\u00e3o Sebasti\u00e3o da Encruzilhada","58910001":"Fazenda Umba\u00fabas","58921500":"Eugen\u00f3polis","60012110":"Ponte Vicent Goulart Jusante","60101100":"Abadia dos Dourados","60134000":"Barra do Perdizes","60150050":"Estrela do Sul","60359090":"Araguari","60850001":"Fazenda Buriti do Prata","60855010":"Ponte do Prata","60927010":"Ponte S\u00e3o Domingos","61060000":"Fazenda Laranjeiras","61135000":"Ibituruna","61176200":"Barra do Rio do Cervo","61260000":"Bicas","61271000":"Itajub\u00e1","61305000":"Santa Rita do Sapuca\u00ed","61370000":"Ponte dos Rodrigues","61510020":"Tr\u00eas Cora\u00e7\u00f5es","61511900":"Ch\u00e1cara Santana","61568050":"Machado","61793990":"Uberaba","61939000":"Barra Rio S\u00e3o Francisco","42395001":"Santa Rosa","42435001":"Fazenda Barra da \u00c9gua","43669999":"Vila Urucuia","43675002":"Fazenda Concei\u00e7\u00e3o"}}</script><script>
 const MANIFEST=JSON.parse(document.getElementById('manifesto').textContent), $=id=>document.getElementById(id), DAY=86400000;
 const CACHE={chuva:{},nivel:{}};
@@ -179,4 +333,6 @@ c.onpointerup=e=>{if(dragStart===null)return;const end=localX(e),begin=dragStart
 c.onpointercancel=()=>{dragStart=null;selection.style.display='none'};
 }
 $('station').onchange=reset;$('variable').onchange=fillStations;const datesChanged=()=>{zoomRange=null;zoomHistory=[];render()};$('start').onchange=datesChanged;$('end').onchange=datesChanged;$('undozoom').onclick=()=>{zoomRange=zoomHistory.length?zoomHistory.pop():null;render()};$('reset').onclick=reset;let timer;window.onresize=()=>{clearTimeout(timer);timer=setTimeout(render,100)};fillStations();
-</script></body></html>
+</script>
+</body>
+</html>
