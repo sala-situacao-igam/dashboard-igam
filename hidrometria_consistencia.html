@@ -69,6 +69,12 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .faixa .qtd{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
 .faixa .rot{font-size:.78rem;color:var(--ink-2)}
 .resumo-faixas{font-size:.75rem;color:var(--ink-3);margin-top:6px}
+.filtros-22{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filtro-ano{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.filtro-ano select{font:inherit;font-size:.75rem;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:7px;padding:3px 6px}
+.resumo-ano{margin:-4px 0 10px;font-size:.75rem;color:var(--ink-2);background:var(--page);
+  border-radius:6px;padding:5px 8px}
 .janela{border:1px solid var(--grid);border-radius:8px;max-height:272px;overflow:auto}
 .janela table{width:100%;border-collapse:collapse;font-size:.78rem}
 .janela thead th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);
@@ -220,7 +226,7 @@ canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Hidrologia — Consistência por estação</h1>
-    <p>Período: 01/07/2026 a 02/10/2026 · atualizado em 02/10/2026 às 06:50</p>
+    <p>Período: 01/07/2026 a 02/10/2026 · atualizado em 02/10/2026 às 15:51</p>
   </div>
   <p class="nota-pagina">Precipitação e nível, por estação · aprovado = passou no teste de consistência do indicador 2.8</p>
   <div class="controls"><label>Estação<select id="station"></select></label><label>Variável<select id="variable"><option value="chuva">Precipitação</option><option value="nivel">Nível</option></select></label><label>Data inicial<input id="start" type="date"></label><label>Data final<input id="end" type="date"></label><button id="reset">Período completo</button><button id="undozoom">Desfazer zoom</button></div>

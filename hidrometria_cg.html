@@ -69,6 +69,12 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .faixa .qtd{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
 .faixa .rot{font-size:.78rem;color:var(--ink-2)}
 .resumo-faixas{font-size:.75rem;color:var(--ink-3);margin-top:6px}
+.filtros-22{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filtro-ano{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.filtro-ano select{font:inherit;font-size:.75rem;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:7px;padding:3px 6px}
+.resumo-ano{margin:-4px 0 10px;font-size:.75rem;color:var(--ink-2);background:var(--page);
+  border-radius:6px;padding:5px 8px}
 .janela{border:1px solid var(--grid);border-radius:8px;max-height:272px;overflow:auto}
 .janela table{width:100%;border-collapse:collapse;font-size:.78rem}
 .janela thead th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);
@@ -197,18 +203,19 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Hidrologia — Contrato de Gestão</h1>
-    <p>Período: 01/07/2026 a 02/10/2026 · atualizado em 02/10/2026 às 06:50</p>
+    <p><span id="periodo-cab">Período: 01/07/2026 a 02/10/2026</span> · atualizado em 02/10/2026 às 15:50</p>
   </div>
   
-  <section class="kpis" aria-label="Resumo das notas">
+  <div id="avisos"></div>
+  <section class="kpis" id="kpis" aria-label="Resumo das notas">
       <div class="kpi" id="kpi-21">
         <p class="kpi-rotulo">2.1 Transmissão sem atraso</p>
         <p class="kpi-valor">0<small>/10</small></p>
-        <p class="kpi-pct">68,5% dos pacotes · com dados (50)</p>
+        <p class="kpi-pct">69,1% dos pacotes · com dados (50)</p>
         <span class="chip"><span class="chip-icone" style="background:#d03b3b">✕</span>Reprovada</span>
       </div>
       <div class="kpi" id="kpi-22c">
-        <p class="kpi-rotulo">2.2 Disponibilidade · Cota</p>
+        <p class="kpi-rotulo">2.2 Disponibilidade · Nível</p>
         <p class="kpi-valor">4<small>/10</small></p>
         <p class="kpi-pct">48,3% média de 58 estações</p>
         
@@ -222,48 +229,55 @@ body .nav-site, body .subnav-site{max-width:1280px}
       <div class="kpi" id="kpi-28ch">
         <p class="kpi-rotulo">2.8 Consistência · Chuva</p>
         <p class="kpi-valor">10<small>/10</small></p>
-        <p class="kpi-pct">100,0% dos dados coletados consistidos (361.892 de 361.892)</p>
+        <p class="kpi-pct">100,0% dos dados coletados consistidos (363.402 de 363.402)</p>
         <span class="chip"><span class="chip-icone" style="background:#0ca30c">✓</span>Ótima</span>
       </div>
       <div class="kpi" id="kpi-28n">
         <p class="kpi-rotulo">2.8 Consistência · Nível</p>
         <p class="kpi-valor">9<small>/10</small></p>
-        <p class="kpi-pct">93,1% dos dados coletados consistidos (233.216 de 250.487)</p>
+        <p class="kpi-pct">93,1% dos dados coletados consistidos (234.229 de 251.553)</p>
         <span class="chip"><span class="chip-icone" style="background:#52c90d">✓</span>Muito boa</span>
       </div>
   </section>
   <div class="grade">
     <section class="cartao" aria-labelledby="t21">
       <div class="cartao-topo">
-        <div><h2 id="t21">2.1 — Atraso na transmissão</h2><p class="sub">11/08/2026 a 02/10/2026</p></div>
+        <div><h2 id="t21">2.1 — Atraso na transmissão</h2><p class="sub" id="sub-21">11/08/2026 a 02/10/2026</p></div>
         
       </div>
-      <div class="u21" data-u="0" ><div class="colunas"><div class="col-item" data-tip="Sem atraso: 68,5% dos pacotes previstos">
-              <span class="col-valor">68,5%</span>
-              <span class="col-barra" style="height:58.2%;background:var(--c-aprov)"></span>
+      <div id="paineis-21"><div class="u21" data-u="0" ><div class="colunas"><div class="col-item" data-tip="Sem atraso: 69,1% dos pacotes previstos">
+              <span class="col-valor">69,1%</span>
+              <span class="col-barra" style="height:58.7%;background:var(--c-aprov)"></span>
             </div><div class="col-item" data-tip="Com atraso: 1,8% dos pacotes previstos">
               <span class="col-valor">1,8%</span>
               <span class="col-barra" style="height:1.5%;background:var(--c-reprov)"></span>
-            </div><div class="col-item" data-tip="Não recebido: 29,7% dos pacotes previstos">
-              <span class="col-valor">29,7%</span>
-              <span class="col-barra" style="height:25.2%;background:var(--c-neutro)"></span>
-            </div></div><div class="col-rotulos"><span class="col-rotulo">Sem atraso</span><span class="col-rotulo">Com atraso</span><span class="col-rotulo">Não recebido</span></div><p class="nota-rodape">Com dados (50) · nota 0/10 · base: pacotes previstos (24/dia por estação)</p></div>
+            </div><div class="col-item" data-tip="Não recebido: 29,1% dos pacotes previstos">
+              <span class="col-valor">29,1%</span>
+              <span class="col-barra" style="height:24.7%;background:var(--c-neutro)"></span>
+            </div></div><div class="col-rotulos"><span class="col-rotulo">Sem atraso</span><span class="col-rotulo">Com atraso</span><span class="col-rotulo">Não recebido</span></div><p class="nota-rodape">Com dados (50) · nota 0/10 · base: pacotes previstos (24/dia por estação)</p></div></div>
     </section>
     <section class="cartao span2" aria-labelledby="t22">
       <div class="cartao-topo">
         <div><h2 id="t22">2.2 — Disponibilidade de dados (sem perda de registros)</h2>
           <p class="sub">Nota por estação conforme o Anexo II · clique numa faixa para filtrar</p></div>
-        <div class="seg-ctrl" role="group" aria-label="Variável">
-          <button type="button" data-v22="cota" aria-pressed="true">Cota</button>
-          <button type="button" data-v22="chuva" aria-pressed="false">Chuva</button>
+        <div class="filtros-22">
+          <label class="filtro-ano">Início de operação
+            <select id="ano-22" aria-label="Filtrar por ano de início de operação"><option value="todos">Todos</option></select>
+          </label>
+          <div class="seg-ctrl" role="group" aria-label="Variável">
+            <button type="button" data-v22="cota" aria-pressed="true">Nível</button>
+            <button type="button" data-v22="chuva" aria-pressed="false">Chuva</button>
+          </div>
         </div>
       </div>
+      <p class="resumo-ano" id="resumo-ano" hidden></p>
       <div class="dois-paineis">
         <div><div class="faixas" id="faixas"></div><p class="resumo-faixas" id="resumo-faixas"></p></div>
         <div>
           <div class="janela" tabindex="0" aria-label="Ranking de estações (role dentro da janela)">
             <table>
               <thead><tr><th data-ord="percentual">#</th><th data-ord="codigo">Código</th><th data-ord="nome">Estação</th>
+                <th data-ord="ano" title="Ano de início de operação">Início</th>
                 <th data-ord="percentual">Disponibilidade ▾</th><th data-ord="pontuacao">Nota</th></tr></thead>
               <tbody id="corpo-2-2"></tbody>
             </table>
@@ -272,76 +286,76 @@ body .nav-site, body .subnav-site{max-width:1280px}
           <details class="detalhes" id="sem-dados">
             <summary id="sem-dados-titulo"></summary>
             <div class="lista-janela" tabindex="0" aria-label="Estações sem nenhum dado no período">
-              <table><thead><tr><th>Código</th><th>Estação</th></tr></thead><tbody id="corpo-sem-dados"></tbody></table>
+              <table><thead><tr><th>Código</th><th>Estação</th><th>Início</th></tr></thead><tbody id="corpo-sem-dados"></tbody></table>
             </div>
           </details>
         </div>
       </div>
     </section>
-    <section class="cartao span2" aria-labelledby="t28">
+    <section class="cartao span2" id="cartao-28" aria-labelledby="t28">
       <div class="cartao-topo">
         <div><h2 id="t28">2.8 — Consistência de dados</h2>
           <p class="sub">Leituras aprovadas ÷ leituras testadas, somando todas as estações (soma da rede)</p></div>
         <div class="legenda"><span><i style="background:var(--c-aprov)"></i>Aprovado</span>
           <span><i style="background:var(--c-reprov)"></i>Reprovado (suspeito, nulo, não aprovado)</span></div>
       </div>
-      
+      <div id="barras-28">
         <div class="barra100">
           <div class="barra100-cab"><span class="barra100-rotulo">Chuva — valores impossíveis (acumulado mensal)</span>
-            <span class="barra100-base">367.508 leituras</span></div>
+            <span class="barra100-base">369.044 leituras</span></div>
           <div class="barra100-trilha">
             <span class="seg" style="width:98.47%;background:var(--c-aprov)"
-                  data-tip="Aprovado: 361.892 leituras (98,5%)"></span>
+                  data-tip="Aprovado: 363.402 leituras (98,5%)"></span>
             <span class="seg" style="width:1.53%;background:var(--c-reprov)"
-                  data-tip="Reprovado: 5.616 leituras (1,5%)"></span>
+                  data-tip="Reprovado: 5.642 leituras (1,5%)"></span>
           </div>
           <div class="barra100-rotulos"><span>98,5% aprovado</span><span>1,5% reprovado</span></div>
         </div>
         <div class="barra100">
           <div class="barra100-cab"><span class="barra100-rotulo">Nível — Range (alcance)</span>
-            <span class="barra100-base">320.494 leituras</span></div>
+            <span class="barra100-base">321.822 leituras</span></div>
           <div class="barra100-trilha">
-            <span class="seg" style="width:64.48%;background:var(--c-aprov)"
-                  data-tip="Aprovado: 206.644 leituras (64,5%)"></span>
-            <span class="seg" style="width:35.52%;background:var(--c-reprov)"
-                  data-tip="Reprovado: 113.850 leituras (35,5%)"></span>
+            <span class="seg" style="width:64.47%;background:var(--c-aprov)"
+                  data-tip="Aprovado: 207.466 leituras (64,5%)"></span>
+            <span class="seg" style="width:35.53%;background:var(--c-reprov)"
+                  data-tip="Reprovado: 114.356 leituras (35,5%)"></span>
           </div>
           <div class="barra100-rotulos"><span>64,5% aprovado</span><span>35,5% reprovado</span></div>
         </div>
         <div class="barra100">
           <div class="barra100-cab"><span class="barra100-rotulo">Nível — resultado final (Range + Persist)</span>
-            <span class="barra100-base">320.494 leituras</span></div>
+            <span class="barra100-base">321.822 leituras</span></div>
           <div class="barra100-trilha">
-            <span class="seg" style="width:53.73%;background:var(--c-aprov)"
-                  data-tip="Aprovado: 172.204 leituras (53,7%)"></span>
-            <span class="seg" style="width:46.27%;background:var(--c-reprov)"
-                  data-tip="Reprovado: 148.290 leituras (46,3%)"></span>
+            <span class="seg" style="width:53.74%;background:var(--c-aprov)"
+                  data-tip="Aprovado: 172.958 leituras (53,7%)"></span>
+            <span class="seg" style="width:46.26%;background:var(--c-reprov)"
+                  data-tip="Reprovado: 148.864 leituras (46,3%)"></span>
           </div>
           <div class="barra100-rotulos"><span>53,7% aprovado</span><span>46,3% reprovado</span></div>
-        </div>
-      <ul class="nota-rodape"><li>Chuva: 55 estações · Nível: 47 estações (só fluviométricas; desinstaladas excluídas).</li><li>Gráficos (qualidade): todas as leituras entram na base; leituras em branco, suspeitas e &#x27;Teste não realizado&#x27; contam como reprovadas. Nível — resultado final: aprovada no Range e no Persist.</li><li>Nota (cards): dados consistidos ÷ dados coletados — leituras que chegaram com valor e receberam resultado da consistência (aprovadas ou reprovadas). Leituras em branco não são dado coletado (já cobradas no 2.2); não consistidas são as leituras com valor que não puderam ser testadas.</li></ul>
+        </div></div>
+      <ul class="nota-rodape" id="notas-28"><li>Chuva: 55 estações · Nível: 47 estações (só fluviométricas; desinstaladas excluídas).</li><li>Gráficos (qualidade): todas as leituras entram na base; leituras em branco, suspeitas e &#x27;Teste não realizado&#x27; contam como reprovadas. Nível — resultado final: aprovada no Range e no Persist.</li><li>Nota (cards): dados consistidos ÷ dados coletados — leituras que chegaram com valor e receberam resultado da consistência (aprovadas ou reprovadas). Leituras em branco não são dado coletado (já cobradas no 2.2); não consistidas são as leituras com valor que não puderam ser testadas.</li></ul>
     </section>
-    <section class="cartao" aria-labelledby="tch">
+    <section class="cartao" id="cartao-merge" aria-labelledby="tch">
       <h2 id="tch">2.8 — Chuva: comparação com o MERGE (CPTEC/INPE)</h2>
-      <p class="sub">01/07/2026 a 01/10/2026 (último dia já publicado pelo MERGE) · informativo, não entra na nota</p>
-      
+      <p class="sub"><span id="sub-merge">01/07/2026 a 02/10/2026 (último dia já publicado pelo MERGE)</span> · informativo, não entra na nota</p>
+      <div id="barra-merge">
         <div class="barra100">
           <div class="barra100-cab"><span class="barra100-rotulo">Estação × satélite (por dia)</span>
-            <span class="barra100-base">4.238 estações-dia</span></div>
+            <span class="barra100-base">4.282 estações-dia</span></div>
           <div class="barra100-trilha">
-            <span class="seg" style="width:95.19%;background:var(--c-aprov)"
-                  data-tip="Convergência: 4.034 estações-dia (95,2%)"></span>
-            <span class="seg" style="width:4.81%;background:var(--c-reprov)"
-                  data-tip="Divergência: 204 estações-dia (4,8%)"></span>
+            <span class="seg" style="width:95.14%;background:var(--c-aprov)"
+                  data-tip="Convergência: 4.074 estações-dia (95,1%)"></span>
+            <span class="seg" style="width:4.86%;background:var(--c-reprov)"
+                  data-tip="Divergência: 208 estações-dia (4,9%)"></span>
           </div>
-          <div class="barra100-rotulos"><span>95,2% convergência</span><span>4,8% divergência</span></div>
-        </div>
+          <div class="barra100-rotulos"><span>95,1% convergência</span><span>4,9% divergência</span></div>
+        </div></div>
       <p class="nota-rodape">Divergência = um lado registrou chuva (&gt; 1 mm na janela 12Z-12Z) e o outro não.</p>
     </section>
   </div>
 </div>
 <div id="tip" role="tooltip"></div>
-<script type="application/json" id="dados-2-2">{"cota": [{"codigo": "40850010", "nome": "Ponte da Taquara", "percentual": 99.42, "pontuacao": 10}, {"codigo": "41180001", "nome": "Itabirito Linígrafo", "percentual": 99.29, "pontuacao": 10}, {"codigo": "56083000", "nome": "Viçosa Hidro", "percentual": 99.29, "pontuacao": 10}, {"codigo": "60850001", "nome": "Fazenda Buriti do Prata", "percentual": 99.29, "pontuacao": 10}, {"codigo": "42395001", "nome": "Santa Rosa", "percentual": 99.28, "pontuacao": 10}, {"codigo": "43675002", "nome": "Fazenda Conceição", "percentual": 99.25, "pontuacao": 10}, {"codigo": "61305000", "nome": "Santa Rita do Sapucaí", "percentual": 99.22, "pontuacao": 10}, {"codigo": "42255500", "nome": "Santa Izabel", "percentual": 99.16, "pontuacao": 10}, {"codigo": "61260000", "nome": "Bicas", "percentual": 99.09, "pontuacao": 10}, {"codigo": "42860020", "nome": "Cachoeira do Paredão", "percentual": 98.89, "pontuacao": 10}, {"codigo": "60927010", "nome": "Ponte São Domingos", "percentual": 98.76, "pontuacao": 10}, {"codigo": "60359090", "nome": "Araguari", "percentual": 98.47, "pontuacao": 10}, {"codigo": "42970900", "nome": "Porto Alegre", "percentual": 98.18, "pontuacao": 10}, {"codigo": "61568050", "nome": "Machado", "percentual": 97.56, "pontuacao": 10}, {"codigo": "61135000", "nome": "Ibituruna", "percentual": 97.31, "pontuacao": 10}, {"codigo": "42550900", "nome": "Porto dos Poções", "percentual": 96.09, "pontuacao": 10}, {"codigo": "60855010", "nome": "Ponte do Prata", "percentual": 95.2, "pontuacao": 10}, {"codigo": "61511900", "nome": "Chácara Santana", "percentual": 95.12, "pontuacao": 10}, {"codigo": "41210001", "nome": "Caeté", "percentual": 89.42, "pontuacao": 8}, {"codigo": "61176200", "nome": "Barra do Rio do Cervo", "percentual": 88.84, "pontuacao": 8}, {"codigo": "56933020", "nome": "Barra do Cuieté Jusante", "percentual": 86.04, "pontuacao": 8}, {"codigo": "43669999", "nome": "Vila Urucuia", "percentual": 84.61, "pontuacao": 8}, {"codigo": "40755000", "nome": "Crucilândia", "percentual": 80.9, "pontuacao": 8}, {"codigo": "40185010", "nome": "Pari", "percentual": 76.76, "pontuacao": 7}, {"codigo": "40710001", "nome": "Belo Vale", "percentual": 75.29, "pontuacao": 7}, {"codigo": "60134000", "nome": "Barra do Perdizes", "percentual": 64.88, "pontuacao": 0}, {"codigo": "60150050", "nome": "Estrela do Sul", "percentual": 63.52, "pontuacao": 0}, {"codigo": "61939000", "nome": "Barra Rio São Francisco", "percentual": 60.53, "pontuacao": 0}, {"codigo": "41151001", "nome": "Fazenda Agua Limpa Jusante", "percentual": 58.34, "pontuacao": 0}, {"codigo": "54501000", "nome": "Araçuaí", "percentual": 41.31, "pontuacao": 0}, {"codigo": "43300001", "nome": "Fazenda Carvalho", "percentual": 35.66, "pontuacao": 0}, {"codigo": "55660001", "nome": "São Pedro do Pampã", "percentual": 35.15, "pontuacao": 0}, {"codigo": "40053100", "nome": "Barra do Rio São Miguel", "percentual": 32.0, "pontuacao": 0}, {"codigo": "41075003", "nome": "Porto Passarinho", "percentual": 22.08, "pontuacao": 0}, {"codigo": "40680001", "nome": "Entre Rios de Minas", "percentual": 20.03, "pontuacao": 0}, {"codigo": "42251001", "nome": "Fazenda Córrego do Ouro", "percentual": 6.78, "pontuacao": 0}, {"codigo": "61271000", "nome": "Itajubá", "percentual": 2.29, "pontuacao": 0}, {"codigo": "60101100", "nome": "Abadia dos Dourados", "percentual": 2.13, "pontuacao": 0}, {"codigo": "43429997", "nome": "Arinos Montante", "percentual": 1.87, "pontuacao": 0}, {"codigo": "42690002", "nome": "Porto da Extrema", "percentual": 1.44, "pontuacao": 0}, {"codigo": "55610001", "nome": "Francisco Sá", "percentual": 1.06, "pontuacao": 0}, {"codigo": "40712500", "nome": "Bonfim", "percentual": 0.0, "pontuacao": 0}, {"codigo": "40974900", "nome": "Fazenda São Felix", "percentual": 0.0, "pontuacao": 0}, {"codigo": "41940001", "nome": "Ponte do Bicudo", "percentual": 0.0, "pontuacao": 0}, {"codigo": "41955000", "nome": "Lassance", "percentual": 0.0, "pontuacao": 0}, {"codigo": "42145499", "nome": "Fazenda Umburana Montante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "42435001", "nome": "Fazenda Barra da Égua", "percentual": 0.0, "pontuacao": 0}, {"codigo": "42980500", "nome": "Barra do Rio - PTE013", "percentual": 0.0, "pontuacao": 0}, {"codigo": "44252000", "nome": "Usina do Pandeiros Jusante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "54110003", "nome": "Fazenda Jambeiro - Grão Mogol", "percentual": 0.0, "pontuacao": 0}, {"codigo": "54730006", "nome": "Fazenda Boa Sorte Jusante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "56860001", "nome": "São Pedro do Suaçuí", "percentual": 0.0, "pontuacao": 0}, {"codigo": "56990020", "nome": "São Sebastião da Encruzilhada", "percentual": 0.0, "pontuacao": 0}, {"codigo": "58910001", "nome": "Fazenda Umbaúbas", "percentual": 0.0, "pontuacao": 0}, {"codigo": "58921500", "nome": "Eugenópolis", "percentual": 0.0, "pontuacao": 0}, {"codigo": "60012110", "nome": "Ponte Vicent Goulart Jusante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "61060000", "nome": "Fazenda Laranjeiras", "percentual": 0.0, "pontuacao": 0}, {"codigo": "61510020", "nome": "Três Corações", "percentual": 0.0, "pontuacao": 0}], "chuva": [{"codigo": "40974900", "nome": "Fazenda São Felix", "percentual": 99.69, "pontuacao": 10}, {"codigo": "43669999", "nome": "Vila Urucuia", "percentual": 99.39, "pontuacao": 10}, {"codigo": "40850010", "nome": "Ponte da Taquara", "percentual": 99.38, "pontuacao": 10}, {"codigo": "42435001", "nome": "Fazenda Barra da Égua", "percentual": 99.34, "pontuacao": 10}, {"codigo": "41180001", "nome": "Itabirito Linígrafo", "percentual": 99.29, "pontuacao": 10}, {"codigo": "61271000", "nome": "Itajubá", "percentual": 99.29, "pontuacao": 10}, {"codigo": "61305000", "nome": "Santa Rita do Sapucaí", "percentual": 99.29, "pontuacao": 10}, {"codigo": "60850001", "nome": "Fazenda Buriti do Prata", "percentual": 99.27, "pontuacao": 10}, {"codigo": "42395001", "nome": "Santa Rosa", "percentual": 99.26, "pontuacao": 10}, {"codigo": "02044079", "nome": "Lagoa Dourada", "percentual": 99.25, "pontuacao": 10}, {"codigo": "43675002", "nome": "Fazenda Conceição", "percentual": 99.21, "pontuacao": 10}, {"codigo": "60134000", "nome": "Barra do Perdizes", "percentual": 99.19, "pontuacao": 10}, {"codigo": "56083000", "nome": "Viçosa Hidro", "percentual": 99.18, "pontuacao": 10}, {"codigo": "61260000", "nome": "Bicas", "percentual": 99.17, "pontuacao": 10}, {"codigo": "42255500", "nome": "Santa Izabel", "percentual": 99.16, "pontuacao": 10}, {"codigo": "02142097", "nome": "Mirai", "percentual": 99.15, "pontuacao": 10}, {"codigo": "55610001", "nome": "Francisco Sá", "percentual": 99.14, "pontuacao": 10}, {"codigo": "53511000", "nome": "Barra do Mosquito", "percentual": 99.07, "pontuacao": 10}, {"codigo": "43300001", "nome": "Fazenda Carvalho", "percentual": 98.98, "pontuacao": 10}, {"codigo": "43429997", "nome": "Arinos Montante", "percentual": 98.98, "pontuacao": 10}, {"codigo": "42860020", "nome": "Cachoeira do Paredão", "percentual": 98.89, "pontuacao": 10}, {"codigo": "56933020", "nome": "Barra do Cuieté Jusante", "percentual": 98.84, "pontuacao": 10}, {"codigo": "60927010", "nome": "Ponte São Domingos", "percentual": 98.76, "pontuacao": 10}, {"codigo": "61135000", "nome": "Ibituruna", "percentual": 98.58, "pontuacao": 10}, {"codigo": "60359090", "nome": "Araguari", "percentual": 98.4, "pontuacao": 10}, {"codigo": "42970900", "nome": "Porto Alegre", "percentual": 98.18, "pontuacao": 10}, {"codigo": "61568050", "nome": "Machado", "percentual": 97.52, "pontuacao": 10}, {"codigo": "54195040", "nome": "Barra do Salinas", "percentual": 96.94, "pontuacao": 10}, {"codigo": "42550900", "nome": "Porto dos Poções", "percentual": 95.99, "pontuacao": 10}, {"codigo": "60855010", "nome": "Ponte do Prata", "percentual": 95.17, "pontuacao": 10}, {"codigo": "61511900", "nome": "Chácara Santana", "percentual": 95.04, "pontuacao": 10}, {"codigo": "41210001", "nome": "Caeté", "percentual": 89.15, "pontuacao": 8}, {"codigo": "61176200", "nome": "Barra do Rio do Cervo", "percentual": 88.78, "pontuacao": 8}, {"codigo": "40100100", "nome": "Barra do Pará", "percentual": 85.74, "pontuacao": 8}, {"codigo": "40755000", "nome": "Crucilândia", "percentual": 80.83, "pontuacao": 8}, {"codigo": "40710001", "nome": "Belo Vale", "percentual": 77.33, "pontuacao": 7}, {"codigo": "40185010", "nome": "Pari", "percentual": 76.73, "pontuacao": 7}, {"codigo": "55660001", "nome": "São Pedro do Pampã", "percentual": 76.67, "pontuacao": 7}, {"codigo": "60150050", "nome": "Estrela do Sul", "percentual": 63.52, "pontuacao": 0}, {"codigo": "61939000", "nome": "Barra Rio São Francisco", "percentual": 60.51, "pontuacao": 0}, {"codigo": "41151001", "nome": "Fazenda Agua Limpa Jusante", "percentual": 58.36, "pontuacao": 0}, {"codigo": "54501000", "nome": "Araçuaí", "percentual": 41.31, "pontuacao": 0}, {"codigo": "41940001", "nome": "Ponte do Bicudo", "percentual": 36.15, "pontuacao": 0}, {"codigo": "02043133", "nome": "Conselheiro Lafaiete", "percentual": 35.32, "pontuacao": 0}, {"codigo": "40053100", "nome": "Barra do Rio São Miguel", "percentual": 32.0, "pontuacao": 0}, {"codigo": "40680001", "nome": "Entre Rios de Minas", "percentual": 22.55, "pontuacao": 0}, {"codigo": "41075003", "nome": "Porto Passarinho", "percentual": 21.85, "pontuacao": 0}, {"codigo": "42980500", "nome": "Barra do Rio - PTE013", "percentual": 11.14, "pontuacao": 0}, {"codigo": "42690002", "nome": "Porto da Extrema", "percentual": 10.26, "pontuacao": 0}, {"codigo": "02042051", "nome": "Rosário da Limeira", "percentual": 7.84, "pontuacao": 0}, {"codigo": "42251001", "nome": "Fazenda Córrego do Ouro", "percentual": 6.83, "pontuacao": 0}, {"codigo": "60101100", "nome": "Abadia dos Dourados", "percentual": 2.13, "pontuacao": 0}, {"codigo": "60012110", "nome": "Ponte Vicent Goulart Jusante", "percentual": 1.06, "pontuacao": 0}, {"codigo": "02142096", "nome": "São Sebastião da Vargem Alegre", "percentual": 0.5, "pontuacao": 0}, {"codigo": "40712500", "nome": "Bonfim", "percentual": 0.0, "pontuacao": 0}, {"codigo": "41955000", "nome": "Lassance", "percentual": 0.0, "pontuacao": 0}, {"codigo": "42145499", "nome": "Fazenda Umburana Montante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "44252000", "nome": "Usina do Pandeiros Jusante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "54110003", "nome": "Fazenda Jambeiro - Grão Mogol", "percentual": 0.0, "pontuacao": 0}, {"codigo": "54730006", "nome": "Fazenda Boa Sorte Jusante", "percentual": 0.0, "pontuacao": 0}, {"codigo": "56860001", "nome": "São Pedro do Suaçuí", "percentual": 0.0, "pontuacao": 0}, {"codigo": "56990020", "nome": "São Sebastião da Encruzilhada", "percentual": 0.0, "pontuacao": 0}, {"codigo": "58910001", "nome": "Fazenda Umbaúbas", "percentual": 0.0, "pontuacao": 0}, {"codigo": "58921500", "nome": "Eugenópolis", "percentual": 0.0, "pontuacao": 0}, {"codigo": "61060000", "nome": "Fazenda Laranjeiras", "percentual": 0.0, "pontuacao": 0}, {"codigo": "61510020", "nome": "Três Corações", "percentual": 0.0, "pontuacao": 0}]}</script>
+<script type="application/json" id="dados-2-2">{"cota": [{"codigo": "40850010", "nome": "Ponte da Taquara", "ano": 2024, "percentual": 99.42, "pontuacao": 10}, {"codigo": "41180001", "nome": "Itabirito Linígrafo", "ano": 2016, "percentual": 99.29, "pontuacao": 10}, {"codigo": "56083000", "nome": "Viçosa Hidro", "ano": 2017, "percentual": 99.29, "pontuacao": 10}, {"codigo": "60850001", "nome": "Fazenda Buriti do Prata", "ano": 2018, "percentual": 99.29, "pontuacao": 10}, {"codigo": "42395001", "nome": "Santa Rosa", "ano": 2025, "percentual": 99.28, "pontuacao": 10}, {"codigo": "43675002", "nome": "Fazenda Conceição", "ano": 2025, "percentual": 99.25, "pontuacao": 10}, {"codigo": "61305000", "nome": "Santa Rita do Sapucaí", "ano": 2016, "percentual": 99.22, "pontuacao": 10}, {"codigo": "42255500", "nome": "Santa Izabel", "ano": 2018, "percentual": 99.16, "pontuacao": 10}, {"codigo": "61260000", "nome": "Bicas", "ano": 2016, "percentual": 99.09, "pontuacao": 10}, {"codigo": "42860020", "nome": "Cachoeira do Paredão", "ano": 2024, "percentual": 98.89, "pontuacao": 10}, {"codigo": "60927010", "nome": "Ponte São Domingos", "ano": 2024, "percentual": 98.76, "pontuacao": 10}, {"codigo": "60359090", "nome": "Araguari", "ano": 2024, "percentual": 98.4, "pontuacao": 10}, {"codigo": "42970900", "nome": "Porto Alegre", "ano": 2024, "percentual": 98.18, "pontuacao": 10}, {"codigo": "61568050", "nome": "Machado", "ano": 2024, "percentual": 97.88, "pontuacao": 10}, {"codigo": "61135000", "nome": "Ibituruna", "ano": 2018, "percentual": 97.31, "pontuacao": 10}, {"codigo": "42550900", "nome": "Porto dos Poções", "ano": 2024, "percentual": 96.09, "pontuacao": 10}, {"codigo": "60855010", "nome": "Ponte do Prata", "ano": 2024, "percentual": 95.2, "pontuacao": 10}, {"codigo": "61511900", "nome": "Chácara Santana", "ano": 2024, "percentual": 95.12, "pontuacao": 10}, {"codigo": "41210001", "nome": "Caeté", "ano": 2015, "percentual": 89.42, "pontuacao": 8}, {"codigo": "61176200", "nome": "Barra do Rio do Cervo", "ano": 2024, "percentual": 88.84, "pontuacao": 8}, {"codigo": "56933020", "nome": "Barra do Cuieté Jusante", "ano": 2024, "percentual": 86.04, "pontuacao": 8}, {"codigo": "43669999", "nome": "Vila Urucuia", "ano": 2025, "percentual": 84.61, "pontuacao": 8}, {"codigo": "40755000", "nome": "Crucilândia", "ano": 2014, "percentual": 80.9, "pontuacao": 8}, {"codigo": "40185010", "nome": "Pari", "ano": 2024, "percentual": 77.31, "pontuacao": 7}, {"codigo": "40710001", "nome": "Belo Vale", "ano": 2018, "percentual": 75.29, "pontuacao": 7}, {"codigo": "60134000", "nome": "Barra do Perdizes", "ano": 2024, "percentual": 64.88, "pontuacao": 0}, {"codigo": "60150050", "nome": "Estrela do Sul", "ano": 2024, "percentual": 63.52, "pontuacao": 0}, {"codigo": "61939000", "nome": "Barra Rio São Francisco", "ano": 2024, "percentual": 60.53, "pontuacao": 0}, {"codigo": "41151001", "nome": "Fazenda Agua Limpa Jusante", "ano": 2024, "percentual": 58.34, "pontuacao": 0}, {"codigo": "54501000", "nome": "Araçuaí", "ano": 2017, "percentual": 41.31, "pontuacao": 0}, {"codigo": "43300001", "nome": "Fazenda Carvalho", "ano": 2016, "percentual": 35.66, "pontuacao": 0}, {"codigo": "55660001", "nome": "São Pedro do Pampã", "ano": 2017, "percentual": 35.15, "pontuacao": 0}, {"codigo": "40053100", "nome": "Barra do Rio São Miguel", "ano": 2024, "percentual": 32.0, "pontuacao": 0}, {"codigo": "41075003", "nome": "Porto Passarinho", "ano": 2017, "percentual": 22.08, "pontuacao": 0}, {"codigo": "40680001", "nome": "Entre Rios de Minas", "ano": 2014, "percentual": 20.1, "pontuacao": 0}, {"codigo": "42251001", "nome": "Fazenda Córrego do Ouro", "ano": 2017, "percentual": 6.78, "pontuacao": 0}, {"codigo": "60101100", "nome": "Abadia dos Dourados", "ano": 2024, "percentual": 2.13, "pontuacao": 0}, {"codigo": "61271000", "nome": "Itajubá", "ano": 2016, "percentual": 2.04, "pontuacao": 0}, {"codigo": "43429997", "nome": "Arinos Montante", "ano": 2017, "percentual": 1.82, "pontuacao": 0}, {"codigo": "42690002", "nome": "Porto da Extrema", "ano": 2018, "percentual": 1.44, "pontuacao": 0}, {"codigo": "55610001", "nome": "Francisco Sá", "ano": 2017, "percentual": 1.05, "pontuacao": 0}, {"codigo": "40712500", "nome": "Bonfim", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "40974900", "nome": "Fazenda São Felix", "ano": 2024, "percentual": 0.0, "pontuacao": 0}, {"codigo": "41940001", "nome": "Ponte do Bicudo", "ano": 2017, "percentual": 0.0, "pontuacao": 0}, {"codigo": "41955000", "nome": "Lassance", "ano": 2015, "percentual": 0.0, "pontuacao": 0}, {"codigo": "42145499", "nome": "Fazenda Umburana Montante", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "42435001", "nome": "Fazenda Barra da Égua", "ano": 2025, "percentual": 0.0, "pontuacao": 0}, {"codigo": "42980500", "nome": "Barra do Rio - PTE013", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "44252000", "nome": "Usina do Pandeiros Jusante", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "54110003", "nome": "Fazenda Jambeiro - Grão Mogol", "ano": 2016, "percentual": 0.0, "pontuacao": 0}, {"codigo": "54730006", "nome": "Fazenda Boa Sorte Jusante", "ano": 2016, "percentual": 0.0, "pontuacao": 0}, {"codigo": "56860001", "nome": "São Pedro do Suaçuí", "ano": 2017, "percentual": 0.0, "pontuacao": 0}, {"codigo": "56990020", "nome": "São Sebastião da Encruzilhada", "ano": 2024, "percentual": 0.0, "pontuacao": 0}, {"codigo": "58910001", "nome": "Fazenda Umbaúbas", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "58921500", "nome": "Eugenópolis", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "60012110", "nome": "Ponte Vicent Goulart Jusante", "ano": 2024, "percentual": 0.0, "pontuacao": 0}, {"codigo": "61060000", "nome": "Fazenda Laranjeiras", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "61510020", "nome": "Três Corações", "ano": 2024, "percentual": 0.0, "pontuacao": 0}], "chuva": [{"codigo": "40974900", "nome": "Fazenda São Felix", "ano": 2024, "percentual": 99.69, "pontuacao": 10}, {"codigo": "43669999", "nome": "Vila Urucuia", "ano": 2025, "percentual": 99.39, "pontuacao": 10}, {"codigo": "40850010", "nome": "Ponte da Taquara", "ano": 2024, "percentual": 99.38, "pontuacao": 10}, {"codigo": "42435001", "nome": "Fazenda Barra da Égua", "ano": 2025, "percentual": 99.34, "pontuacao": 10}, {"codigo": "41180001", "nome": "Itabirito Linígrafo", "ano": 2016, "percentual": 99.29, "pontuacao": 10}, {"codigo": "61271000", "nome": "Itajubá", "ano": 2016, "percentual": 99.29, "pontuacao": 10}, {"codigo": "61305000", "nome": "Santa Rita do Sapucaí", "ano": 2016, "percentual": 99.29, "pontuacao": 10}, {"codigo": "60850001", "nome": "Fazenda Buriti do Prata", "ano": 2018, "percentual": 99.27, "pontuacao": 10}, {"codigo": "42395001", "nome": "Santa Rosa", "ano": 2025, "percentual": 99.26, "pontuacao": 10}, {"codigo": "02044079", "nome": "Lagoa Dourada", "ano": 2014, "percentual": 99.25, "pontuacao": 10}, {"codigo": "43675002", "nome": "Fazenda Conceição", "ano": 2025, "percentual": 99.21, "pontuacao": 10}, {"codigo": "60134000", "nome": "Barra do Perdizes", "ano": 2024, "percentual": 99.19, "pontuacao": 10}, {"codigo": "56083000", "nome": "Viçosa Hidro", "ano": 2017, "percentual": 99.18, "pontuacao": 10}, {"codigo": "61260000", "nome": "Bicas", "ano": 2016, "percentual": 99.17, "pontuacao": 10}, {"codigo": "42255500", "nome": "Santa Izabel", "ano": 2018, "percentual": 99.16, "pontuacao": 10}, {"codigo": "02142097", "nome": "Mirai", "ano": 2014, "percentual": 99.15, "pontuacao": 10}, {"codigo": "55610001", "nome": "Francisco Sá", "ano": 2017, "percentual": 99.14, "pontuacao": 10}, {"codigo": "53511000", "nome": "Barra do Mosquito", "ano": 2024, "percentual": 99.07, "pontuacao": 10}, {"codigo": "43300001", "nome": "Fazenda Carvalho", "ano": 2016, "percentual": 98.98, "pontuacao": 10}, {"codigo": "43429997", "nome": "Arinos Montante", "ano": 2017, "percentual": 98.98, "pontuacao": 10}, {"codigo": "42860020", "nome": "Cachoeira do Paredão", "ano": 2024, "percentual": 98.89, "pontuacao": 10}, {"codigo": "56933020", "nome": "Barra do Cuieté Jusante", "ano": 2024, "percentual": 98.84, "pontuacao": 10}, {"codigo": "60927010", "nome": "Ponte São Domingos", "ano": 2024, "percentual": 98.76, "pontuacao": 10}, {"codigo": "61135000", "nome": "Ibituruna", "ano": 2018, "percentual": 98.58, "pontuacao": 10}, {"codigo": "60359090", "nome": "Araguari", "ano": 2024, "percentual": 98.34, "pontuacao": 10}, {"codigo": "42970900", "nome": "Porto Alegre", "ano": 2024, "percentual": 98.18, "pontuacao": 10}, {"codigo": "61568050", "nome": "Machado", "ano": 2024, "percentual": 97.84, "pontuacao": 10}, {"codigo": "54195040", "nome": "Barra do Salinas", "ano": 2024, "percentual": 96.94, "pontuacao": 10}, {"codigo": "42550900", "nome": "Porto dos Poções", "ano": 2024, "percentual": 95.99, "pontuacao": 10}, {"codigo": "60855010", "nome": "Ponte do Prata", "ano": 2024, "percentual": 95.17, "pontuacao": 10}, {"codigo": "61511900", "nome": "Chácara Santana", "ano": 2024, "percentual": 95.04, "pontuacao": 10}, {"codigo": "41210001", "nome": "Caeté", "ano": 2015, "percentual": 89.16, "pontuacao": 8}, {"codigo": "61176200", "nome": "Barra do Rio do Cervo", "ano": 2024, "percentual": 88.78, "pontuacao": 8}, {"codigo": "40100100", "nome": "Barra do Pará", "ano": 2024, "percentual": 86.05, "pontuacao": 8}, {"codigo": "40755000", "nome": "Crucilândia", "ano": 2014, "percentual": 80.83, "pontuacao": 8}, {"codigo": "40710001", "nome": "Belo Vale", "ano": 2018, "percentual": 77.33, "pontuacao": 7}, {"codigo": "40185010", "nome": "Pari", "ano": 2024, "percentual": 77.28, "pontuacao": 7}, {"codigo": "55660001", "nome": "São Pedro do Pampã", "ano": 2017, "percentual": 76.67, "pontuacao": 7}, {"codigo": "60150050", "nome": "Estrela do Sul", "ano": 2024, "percentual": 63.52, "pontuacao": 0}, {"codigo": "61939000", "nome": "Barra Rio São Francisco", "ano": 2024, "percentual": 60.51, "pontuacao": 0}, {"codigo": "41151001", "nome": "Fazenda Agua Limpa Jusante", "ano": 2024, "percentual": 58.36, "pontuacao": 0}, {"codigo": "54501000", "nome": "Araçuaí", "ano": 2017, "percentual": 41.31, "pontuacao": 0}, {"codigo": "41940001", "nome": "Ponte do Bicudo", "ano": 2017, "percentual": 36.53, "pontuacao": 0}, {"codigo": "02043133", "nome": "Conselheiro Lafaiete", "ano": 2014, "percentual": 35.78, "pontuacao": 0}, {"codigo": "40053100", "nome": "Barra do Rio São Miguel", "ano": 2024, "percentual": 32.0, "pontuacao": 0}, {"codigo": "40680001", "nome": "Entre Rios de Minas", "ano": 2014, "percentual": 22.55, "pontuacao": 0}, {"codigo": "41075003", "nome": "Porto Passarinho", "ano": 2017, "percentual": 21.85, "pontuacao": 0}, {"codigo": "42980500", "nome": "Barra do Rio - PTE013", "ano": 2018, "percentual": 11.14, "pontuacao": 0}, {"codigo": "42690002", "nome": "Porto da Extrema", "ano": 2018, "percentual": 10.26, "pontuacao": 0}, {"codigo": "02042051", "nome": "Rosário da Limeira", "ano": 2014, "percentual": 7.84, "pontuacao": 0}, {"codigo": "42251001", "nome": "Fazenda Córrego do Ouro", "ano": 2017, "percentual": 6.83, "pontuacao": 0}, {"codigo": "60101100", "nome": "Abadia dos Dourados", "ano": 2024, "percentual": 2.13, "pontuacao": 0}, {"codigo": "60012110", "nome": "Ponte Vicent Goulart Jusante", "ano": 2024, "percentual": 1.06, "pontuacao": 0}, {"codigo": "02142096", "nome": "São Sebastião da Vargem Alegre", "ano": 2014, "percentual": 0.5, "pontuacao": 0}, {"codigo": "40712500", "nome": "Bonfim", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "41955000", "nome": "Lassance", "ano": 2015, "percentual": 0.0, "pontuacao": 0}, {"codigo": "42145499", "nome": "Fazenda Umburana Montante", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "44252000", "nome": "Usina do Pandeiros Jusante", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "54110003", "nome": "Fazenda Jambeiro - Grão Mogol", "ano": 2016, "percentual": 0.0, "pontuacao": 0}, {"codigo": "54730006", "nome": "Fazenda Boa Sorte Jusante", "ano": 2016, "percentual": 0.0, "pontuacao": 0}, {"codigo": "56860001", "nome": "São Pedro do Suaçuí", "ano": 2017, "percentual": 0.0, "pontuacao": 0}, {"codigo": "56990020", "nome": "São Sebastião da Encruzilhada", "ano": 2024, "percentual": 0.0, "pontuacao": 0}, {"codigo": "58910001", "nome": "Fazenda Umbaúbas", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "58921500", "nome": "Eugenópolis", "ano": 2014, "percentual": 0.0, "pontuacao": 0}, {"codigo": "61060000", "nome": "Fazenda Laranjeiras", "ano": 2018, "percentual": 0.0, "pontuacao": 0}, {"codigo": "61510020", "nome": "Três Corações", "ano": 2024, "percentual": 0.0, "pontuacao": 0}]}</script>
 <script>
 (function(){
   // ---------- tooltip ----------
@@ -367,10 +381,24 @@ body .nav-site, body .subnav-site{max-width:1280px}
   var ORDEM=[10,9,8,7,0], ROT={10:'Ótima',9:'Muito boa',8:'Boa',7:'Regular',0:'Reprovada'};
   var COR={10:'#0ca30c',9:'#52c90d',8:'#fab219',7:'#ec835a',0:'#d03b3b'};
   var ICO={10:'✓',9:'✓',8:'●',7:'▲',0:'✕'};
-  var estado={variavel:'cota',faixa:null,col:'percentual',desc:true};
+  var estado={variavel:'cota',faixa:null,ano:'todos',col:'percentual',desc:true};
+  function doAno(lista){  // filtro por ano de início de operação (01/10/2026)
+    if(estado.ano==='todos') return lista;
+    return lista.filter(function(e){return String(e.ano)===estado.ano});
+  }
+  function fmtN(v,c){return v.toFixed(c).replace('.',',');}
+  function ok(v){return typeof v==='number'&&isFinite(v);}
+  (function montarAnos(){
+    var sel=document.getElementById('ano-22'); if(!sel) return;
+    var anos={};
+    ['cota','chuva'].forEach(function(v){DADOS[v].forEach(function(e){if(e.ano!=null) anos[e.ano]=1;});});
+    Object.keys(anos).sort().forEach(function(a){
+      var o=document.createElement('option');o.value=a;o.textContent=a;sel.appendChild(o);});
+    sel.addEventListener('change',function(){estado.ano=sel.value;estado.faixa=null;renderFaixas();renderTabela();});
+  })();
 
   function renderFaixas(){
-    var lista=DADOS[estado.variavel], box=document.getElementById('faixas');
+    var lista=doAno(DADOS[estado.variavel]), box=document.getElementById('faixas');
     box.innerHTML='';
     ORDEM.forEach(function(p){
       var n=lista.filter(function(e){return e.pontuacao===p}).length;
@@ -383,30 +411,44 @@ body .nav-site, body .subnav-site{max-width:1280px}
     });
     document.getElementById('resumo-faixas').textContent=
       estado.faixa===null?'Clique numa faixa para filtrar o ranking.':'Filtro ativo — clique de novo para limpar.';
+    var sel=doAno(DADOS[estado.variavel]), caixa=document.getElementById('resumo-ano');
+    if(caixa){
+      if(estado.ano==='todos'||!sel.length){caixa.hidden=true;}
+      else{
+        var cp=sel.filter(function(e){return ok(e.percentual)});
+        var mp=cp.reduce(function(a,e){return a+e.percentual},0)/(cp.length||1);
+        var mn=sel.reduce(function(a,e){return a+e.pontuacao},0)/sel.length;
+        caixa.hidden=false;
+        caixa.textContent=sel.length+' estação(ões) em operação desde '+estado.ano+' · disponibilidade média '+
+          fmtN(mp,1)+'% · nota média '+fmtN(mn,2).replace(/,00$/,'')+'/10 (só desta seleção; o card mostra a rede toda)';
+      }
+    }
   }
   function renderTabela(){
-    var lista=DADOS[estado.variavel].slice();
+    var lista=doAno(DADOS[estado.variavel]).slice();
     if(estado.faixa!==null) lista=lista.filter(function(e){return e.pontuacao===estado.faixa});
     lista.sort(function(a,b){var x=a[estado.col],y=b[estado.col];
+      if(x==null) x=(estado.col==='ano'?9999:''); if(y==null) y=(estado.col==='ano'?9999:'');
       var r=(typeof x==='string')?x.localeCompare(y):x-y; return estado.desc?-r:r;});
     var corpo=document.getElementById('corpo-2-2');
     corpo.innerHTML=lista.map(function(e,i){
       return '<tr><td class="num">'+(i+1)+'</td><td>'+e.codigo+'</td><td>'+e.nome+'</td>'+
-        '<td class="num"><span class="mini-barra" style="width:'+Math.max(1,e.percentual*0.6)+'px"></span>'+
-        e.percentual.toFixed(1).replace('.',',')+'%</td>'+
+        '<td>'+(e.ano==null?'—':e.ano)+'</td>'+
+        (ok(e.percentual)?'<td class="num"><span class="mini-barra" style="width:'+Math.max(1,e.percentual*0.6)+'px"></span>'+
+        e.percentual.toFixed(1).replace('.',',')+'%</td>':'<td class="num">—</td>')+
         '<td><span class="chip"><span class="chip-icone" style="background:'+COR[e.pontuacao]+'">'+ICO[e.pontuacao]+'</span>'+e.pontuacao+'</span></td></tr>';
     }).join('');
     document.getElementById('contador-2-2').textContent=lista.length+' de '+DADOS[estado.variavel].length+' estações';
     renderSemDados();
   }
   function renderSemDados(){
-    var sem=DADOS[estado.variavel].filter(function(e){return e.percentual===0});
+    var sem=doAno(DADOS[estado.variavel]).filter(function(e){return e.percentual===0});
     var box=document.getElementById('sem-dados');
     box.hidden=sem.length===0;
     document.getElementById('sem-dados-titulo').textContent=
-      'Estações sem nenhum dado de '+estado.variavel+' no período ('+sem.length+')';
+      'Estações sem nenhum dado de '+(estado.variavel==='cota'?'nível':'chuva')+' no período ('+sem.length+')';
     document.getElementById('corpo-sem-dados').innerHTML=sem.map(function(e){
-      return '<tr><td>'+e.codigo+'</td><td>'+e.nome+'</td></tr>';}).join('');
+      return '<tr><td>'+e.codigo+'</td><td>'+e.nome+'</td><td>'+(e.ano==null?'—':e.ano)+'</td></tr>';}).join('');
   }
   document.querySelectorAll('[data-v22]').forEach(function(b){
     b.addEventListener('click',function(){
@@ -416,12 +458,15 @@ body .nav-site, body .subnav-site{max-width:1280px}
   });
   document.querySelectorAll('[data-ord]').forEach(function(th){
     th.addEventListener('click',function(){
-      var c=th.dataset.ord; if(estado.col===c){estado.desc=!estado.desc}else{estado.col=c;estado.desc=(c!=='nome'&&c!=='codigo')}
+      var c=th.dataset.ord; if(estado.col===c){estado.desc=!estado.desc}else{estado.col=c;estado.desc=(c!=='nome'&&c!=='codigo'&&c!=='ano')}
       renderTabela();
     });
   });
   renderFaixas();renderTabela();
+  // filtro de data (02/10/2026): troca o ranking pelo do período escolhido
+  window.__cg22={definir:function(novo){DADOS=novo;estado.faixa=null;renderFaixas();renderTabela();}};
 })();
 </script>
+
 </body>
 </html>
