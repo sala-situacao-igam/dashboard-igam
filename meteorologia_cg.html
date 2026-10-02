@@ -69,6 +69,12 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .faixa .qtd{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
 .faixa .rot{font-size:.78rem;color:var(--ink-2)}
 .resumo-faixas{font-size:.75rem;color:var(--ink-3);margin-top:6px}
+.filtros-22{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filtro-ano{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.filtro-ano select{font:inherit;font-size:.75rem;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:7px;padding:3px 6px}
+.resumo-ano{margin:-4px 0 10px;font-size:.75rem;color:var(--ink-2);background:var(--page);
+  border-radius:6px;padding:5px 8px}
 .janela{border:1px solid var(--grid);border-radius:8px;max-height:272px;overflow:auto}
 .janela table{width:100%;border-collapse:collapse;font-size:.78rem}
 .janela thead th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);
@@ -131,6 +137,28 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .dois-graficos{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .dois-graficos h3{font-size:.75rem;color:var(--ink-2);font-weight:600;margin:0 0 6px}
 @media (max-width:900px){.dois-graficos{grid-template-columns:1fr}}
+
+.filtro-datas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 14px;background:var(--surface);
+  border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.filtro-datas label{display:flex;flex-direction:column;gap:3px;font-size:.72rem;color:var(--ink-2);font-weight:600}
+.filtro-datas input,.filtro-datas select{font:inherit;font-size:.8rem;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:7px;padding:4px 7px}
+.filtro-datas button{font:inherit;font-size:.78rem;border-radius:7px;padding:5px 12px;cursor:pointer;
+  border:1px solid var(--ink-2);background:var(--ink-2);color:var(--surface);font-weight:600}
+.filtro-datas button.sec{background:transparent;color:var(--ink-2)}
+.filtro-datas .estado{flex-basis:100%;font-size:.74rem;color:var(--ink-3);margin:0}
+.filtro-datas .estado.ativo{color:var(--aviso-ink);background:var(--aviso-bg);border-radius:6px;padding:4px 8px}
+.evol svg{width:100%;height:auto;display:block;overflow:visible}
+.evol .eixo{font-size:10px;fill:var(--ink-3)}
+.evol .mes{font-size:10.5px;fill:var(--ink-2)}
+.evol .val{font-size:10.5px;font-weight:600;fill:var(--ink)}
+.evol .pa-rot{font-size:10px;font-weight:700;fill:var(--accent)}
+.evol .grade-l{stroke:var(--grid);stroke-width:1}
+.evol .faixa-pa{fill:var(--c-neutro);opacity:.45}
+.evol .serie-a{stroke:var(--c-aprov);fill:none;stroke-width:2.2}
+.evol .serie-b{stroke:var(--c-reprov);fill:none;stroke-width:2.2;stroke-dasharray:5 3}
+.evol .pa-lista{list-style:none;padding:0;margin:8px 0 0;font-size:.74rem;color:var(--ink-2)}
+.evol .pa-lista li{margin:2px 0}
 </style>
 <style>
   .nav-site {
@@ -208,7 +236,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Meteorologia — Contrato de Gestão</h1>
-    <p>Período: 16/09/2026 a 02/10/2026 · atualizado em 02/10/2026 às 15:01</p>
+    <p>Período: 16/09/2026 a 02/10/2026 · atualizado em 02/10/2026</p>
   </div>
   
   <section class="kpis" aria-label="Resumo das notas">
@@ -262,7 +290,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
     <section class="cartao" aria-labelledby="t42">
       <h2 id="t42">4.2 — Monitoramento e alertas</h2>
       <p class="sub">Por mês</p>
-      <p class="resumo-cd"><strong>16</strong> dias com relatório de <strong>17</strong> dias · 250 alertas · 94,12% → nota 6/10</p>
+      <p class="resumo-cd"><strong>16</strong> dias com relatório de <strong>17</strong> dias · 257 alertas · 94,12% → nota 6/10</p>
       <div class="dois-graficos">
         <div><h3>Dias com relatório/alerta</h3><div class="hbarras"><div class="hbarra" data-tip="Set/26: 14 dias"><span class="rot">Set/26</span>
               <span class="trilha"><span class="fill" style="width:100.0%"></span></span>
@@ -271,9 +299,9 @@ body .nav-site, body .subnav-site{max-width:1280px}
               <span class="val">2</span></div></div></div>
         <div><h3>Alertas individuais</h3><div class="hbarras"><div class="hbarra" data-tip="Set/26: 199 alertas"><span class="rot">Set/26</span>
               <span class="trilha"><span class="fill" style="width:100.0%"></span></span>
-              <span class="val">199</span></div><div class="hbarra" data-tip="Out/26: 51 alertas"><span class="rot">Out/26</span>
-              <span class="trilha"><span class="fill" style="width:25.6%"></span></span>
-              <span class="val">51</span></div></div></div>
+              <span class="val">199</span></div><div class="hbarra" data-tip="Out/26: 58 alertas"><span class="rot">Out/26</span>
+              <span class="trilha"><span class="fill" style="width:29.1%"></span></span>
+              <span class="val">58</span></div></div></div>
       </div>
     </section>
     <section class="cartao" aria-labelledby="t43">
@@ -293,6 +321,30 @@ body .nav-site, body .subnav-site{max-width:1280px}
           <table><thead><tr><th>Criado em</th><th>Boletim</th></tr></thead><tbody><tr><td>24/09/2026 09:11</td><td>TENDENCIA_CLIMATICA_OND_2026</td></tr></tbody></table>
         </div>
       </details>
+    </section>
+    <section class="cartao evol" aria-labelledby="tev0">
+      <h2 id="tev0">Evolução da nota — 4.1 — Previsões do tempo</h2>
+      <p class="sub">Nota mensal do Cálculo de Desempenho · faixas = Períodos Avaliatórios</p>
+      
+      <svg viewBox="0 0 380 244" role="img" aria-label="Evolução mensal da nota"><rect class="faixa-pa" x="40.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="117.5" y="18" text-anchor="middle">1º PA</text><rect class="faixa-pa" x="207.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="284.5" y="18" text-anchor="middle">2º PA</text><line class="grade-l" x1="34" x2="368" y1="186.0" y2="186.0"/><text class="eixo" x="28" y="189.5" text-anchor="end">0</text><line class="grade-l" x1="34" x2="368" y1="158.0" y2="158.0"/><text class="eixo" x="28" y="161.5" text-anchor="end">2</text><line class="grade-l" x1="34" x2="368" y1="130.0" y2="130.0"/><text class="eixo" x="28" y="133.5" text-anchor="end">4</text><line class="grade-l" x1="34" x2="368" y1="102.0" y2="102.0"/><text class="eixo" x="28" y="105.5" text-anchor="end">6</text><line class="grade-l" x1="34" x2="368" y1="74.0" y2="74.0"/><text class="eixo" x="28" y="77.5" text-anchor="end">8</text><line class="grade-l" x1="34" x2="368" y1="46.0" y2="46.0"/><text class="eixo" x="28" y="49.5" text-anchor="end">10</text><text class="mes" x="117.5" y="218" text-anchor="middle">Set/26</text><text class="mes" x="284.5" y="218" text-anchor="middle">Out/26</text><path class="serie-a" d="M117.5,46.0 L284.5,46.0"/><circle cx="117.5" cy="46.0" r="5" fill="var(--c-aprov)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.1 · Set/26 (16/09/2026 a 30/09/2026): nota 10"/><text class="val" x="117.5" y="36.0" text-anchor="middle">10</text><circle cx="284.5" cy="46.0" r="5" fill="var(--surface)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.1 · Out/26 (01/10/2026 a 02/10/2026): nota 10 — mês ainda não fechado"/><text class="val" x="284.5" y="36.0" text-anchor="middle">10*</text></svg>
+      <ul class="pa-lista"><li><strong>1º PA</strong> (16/09/2026 a 30/09/2026): nota 10</li><li><strong>2º PA</strong> (01/10/2026 a 02/10/2026), em andamento: nota 10</li></ul>
+      <p class="nota-rodape">* mês ainda não fechado (nota proporcional até o dia).</p>
+    </section>
+    <section class="cartao evol" aria-labelledby="tev1">
+      <h2 id="tev1">Evolução da nota — 4.2 — Monitoramento e alertas</h2>
+      <p class="sub">Nota mensal do Cálculo de Desempenho · faixas = Períodos Avaliatórios</p>
+      
+      <svg viewBox="0 0 380 244" role="img" aria-label="Evolução mensal da nota"><rect class="faixa-pa" x="40.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="117.5" y="18" text-anchor="middle">1º PA</text><rect class="faixa-pa" x="207.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="284.5" y="18" text-anchor="middle">2º PA</text><line class="grade-l" x1="34" x2="368" y1="186.0" y2="186.0"/><text class="eixo" x="28" y="189.5" text-anchor="end">0</text><line class="grade-l" x1="34" x2="368" y1="158.0" y2="158.0"/><text class="eixo" x="28" y="161.5" text-anchor="end">2</text><line class="grade-l" x1="34" x2="368" y1="130.0" y2="130.0"/><text class="eixo" x="28" y="133.5" text-anchor="end">4</text><line class="grade-l" x1="34" x2="368" y1="102.0" y2="102.0"/><text class="eixo" x="28" y="105.5" text-anchor="end">6</text><line class="grade-l" x1="34" x2="368" y1="74.0" y2="74.0"/><text class="eixo" x="28" y="77.5" text-anchor="end">8</text><line class="grade-l" x1="34" x2="368" y1="46.0" y2="46.0"/><text class="eixo" x="28" y="49.5" text-anchor="end">10</text><text class="mes" x="117.5" y="218" text-anchor="middle">Set/26</text><text class="mes" x="284.5" y="218" text-anchor="middle">Out/26</text><path class="serie-a" d="M117.5,102.0 L284.5,46.0"/><circle cx="117.5" cy="102.0" r="5" fill="var(--c-aprov)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.2 · Set/26 (16/09/2026 a 30/09/2026): nota 6"/><text class="val" x="117.5" y="92.0" text-anchor="middle">6</text><circle cx="284.5" cy="46.0" r="5" fill="var(--surface)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.2 · Out/26 (01/10/2026 a 02/10/2026): nota 10 — mês ainda não fechado"/><text class="val" x="284.5" y="36.0" text-anchor="middle">10*</text></svg>
+      <ul class="pa-lista"><li><strong>1º PA</strong> (16/09/2026 a 30/09/2026): nota 6</li><li><strong>2º PA</strong> (01/10/2026 a 02/10/2026), em andamento: nota 10</li></ul>
+      <p class="nota-rodape">* mês ainda não fechado (nota proporcional até o dia).</p>
+    </section>
+    <section class="cartao evol" aria-labelledby="tev2">
+      <h2 id="tev2">Evolução da nota — 4.3 — Monitoramento climático</h2>
+      <p class="sub">Nota mensal do Cálculo de Desempenho · faixas = Períodos Avaliatórios</p>
+      
+      <svg viewBox="0 0 380 244" role="img" aria-label="Evolução mensal da nota"><rect class="faixa-pa" x="40.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="117.5" y="18" text-anchor="middle">1º PA</text><rect class="faixa-pa" x="207.7" y="4" width="153.6" height="190.0" rx="5"/><text class="pa-rot" x="284.5" y="18" text-anchor="middle">2º PA</text><line class="grade-l" x1="34" x2="368" y1="186.0" y2="186.0"/><text class="eixo" x="28" y="189.5" text-anchor="end">0</text><line class="grade-l" x1="34" x2="368" y1="158.0" y2="158.0"/><text class="eixo" x="28" y="161.5" text-anchor="end">2</text><line class="grade-l" x1="34" x2="368" y1="130.0" y2="130.0"/><text class="eixo" x="28" y="133.5" text-anchor="end">4</text><line class="grade-l" x1="34" x2="368" y1="102.0" y2="102.0"/><text class="eixo" x="28" y="105.5" text-anchor="end">6</text><line class="grade-l" x1="34" x2="368" y1="74.0" y2="74.0"/><text class="eixo" x="28" y="77.5" text-anchor="end">8</text><line class="grade-l" x1="34" x2="368" y1="46.0" y2="46.0"/><text class="eixo" x="28" y="49.5" text-anchor="end">10</text><text class="mes" x="117.5" y="218" text-anchor="middle">Set/26</text><text class="mes" x="284.5" y="218" text-anchor="middle">Out/26</text><path class="serie-a" d="M117.5,46.0 L284.5,186.0"/><circle cx="117.5" cy="46.0" r="5" fill="var(--c-aprov)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.3 · Set/26 (16/09/2026 a 30/09/2026): nota 10"/><text class="val" x="117.5" y="36.0" text-anchor="middle">10</text><circle cx="284.5" cy="186.0" r="5" fill="var(--surface)" stroke="var(--c-aprov)" stroke-width="2" data-tip="4.3 · Out/26 (01/10/2026 a 02/10/2026): nota 0 — mês ainda não fechado"/><text class="val" x="284.5" y="176.0" text-anchor="middle">0*</text></svg>
+      <ul class="pa-lista"><li><strong>1º PA</strong> (16/09/2026 a 30/09/2026): nota 10</li><li><strong>2º PA</strong> (01/10/2026 a 02/10/2026), em andamento: nota 0</li></ul>
+      <p class="nota-rodape">* mês ainda não fechado (nota proporcional até o dia).</p>
     </section>
   </div>
 </div>
