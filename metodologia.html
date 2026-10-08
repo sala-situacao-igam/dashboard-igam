@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Metodologia adotada</title>
+<style>
+:root{
+  --surface:#fcfcfb; --page:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
+  --grid:#e1e0d9; --border:rgba(11,11,11,.10); --accent:#1c3f66;
+  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3;
+  --aviso-bg:#fff4d6; --aviso-ink:#5a4300; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
+    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+    --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
+  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+  --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
+.pagina{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+/* alinha a nav principal e as sub-abas (nav_site/nav_cg usam 920px) à largura da grade */
+body .nav-site, body .subnav-site{max-width:1280px}
+.cabecalho{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:6px 0 14px}
+.cabecalho h1{font-size:1.25rem;margin:0}
+.cabecalho p{margin:0;color:var(--ink-2);font-size:.85rem}
+.aviso{background:var(--aviso-bg);color:var(--aviso-ink);border-radius:8px;padding:8px 12px;font-size:.8rem;margin-bottom:12px}
+
+/* faixa de KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.kpi-rotulo{margin:0;color:var(--ink-2);font-size:.78rem;font-weight:600}
+.kpi-valor{margin:4px 0 0;font-size:2rem;font-weight:600;line-height:1.1}
+.kpi-valor small{font-size:.9rem;color:var(--ink-3);font-weight:400;margin-left:2px}
+.kpi-pct{margin:2px 0 8px;color:var(--ink-2);font-size:.78rem}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.chip-icone{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;color:#fff;font-size:.62rem}
+
+/* grade principal */
+.grade{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.cartao{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;min-width:0}
+.span2{grid-column:span 2}
+.cartao h2{font-size:.95rem;margin:0}
+.cartao .sub{margin:2px 0 12px;color:var(--ink-3);font-size:.75rem}
+.cartao-topo{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap}
+
+/* seletor segmentado */
+.seg-ctrl{display:inline-flex;border:1px solid var(--grid);border-radius:7px;overflow:hidden}
+.seg-ctrl button{border:0;background:transparent;color:var(--ink-2);font:inherit;font-size:.75rem;padding:4px 10px;cursor:pointer}
+.seg-ctrl button[aria-pressed="true"]{background:var(--ink-2);color:var(--surface);font-weight:600}
+
+/* 2.2: filtros + ranking em janela */
+.dois-paineis{display:grid;grid-template-columns:200px minmax(0,1fr);gap:14px}
+.faixas{display:flex;flex-direction:column;gap:6px}
+.faixa{display:flex;align-items:center;gap:8px;border:1px solid var(--grid);background:transparent;
+  border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit;color:var(--ink);text-align:left}
+.faixa[aria-pressed="true"]{border-color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--ink-2)}
+.faixa .qtd{margin-left:auto;font-weight:600;font-variant-numeric:tabular-nums}
+.faixa .rot{font-size:.78rem;color:var(--ink-2)}
+.resumo-faixas{font-size:.75rem;color:var(--ink-3);margin-top:6px}
+.filtros-22{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filtro-ano{display:inline-flex;align-items:center;gap:6px;font-size:.75rem;color:var(--ink-2)}
+.filtro-ano select{font:inherit;font-size:.75rem;color:var(--ink);background:var(--surface);
+  border:1px solid var(--grid);border-radius:7px;padding:3px 6px}
+.resumo-ano{margin:-4px 0 10px;font-size:.75rem;color:var(--ink-2);background:var(--page);
+  border-radius:6px;padding:5px 8px}
+.janela{border:1px solid var(--grid);border-radius:8px;max-height:272px;overflow:auto}
+.janela table{width:100%;border-collapse:collapse;font-size:.78rem}
+.janela thead th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);
+  font-weight:600;padding:7px 8px;border-bottom:1px solid var(--grid);cursor:pointer;white-space:nowrap}
+.janela td{padding:5px 8px;border-bottom:1px solid var(--grid)}
+.janela td.num{text-align:right;font-variant-numeric:tabular-nums}
+.mini-barra{display:inline-block;height:6px;border-radius:0 3px 3px 0;background:var(--accent);vertical-align:middle;margin-right:6px}
+.contador{font-size:.72rem;color:var(--ink-3);margin-top:6px}
+
+/* 2.1 colunas */
+.colunas{display:flex;align-items:flex-end;gap:14px;height:170px;padding:0 6px;border-bottom:1px solid var(--grid)}
+.col-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.col-barra{width:24px;border-radius:4px 4px 0 0;min-height:1px}
+.col-valor{font-size:.8rem;font-weight:600;margin-bottom:4px}
+.col-rotulos{display:flex;gap:14px;padding:6px 6px 0}
+.col-rotulo{flex:1;font-size:.72rem;color:var(--ink-2);text-align:center}
+.nota-rodape{font-size:.72rem;color:var(--ink-3);margin:8px 0 0}
+
+/* 2.8 barras 100% */
+.barra100{margin-bottom:14px}
+.barra100-cab{display:flex;gap:10px;align-items:baseline;margin-bottom:5px;flex-wrap:wrap}
+.barra100-rotulo{font-weight:600;font-size:.82rem}
+.barra100-base{color:var(--ink-3);font-size:.72rem}
+.barra100-nota{margin-left:auto;font-size:.75rem;color:var(--ink-2);font-weight:600}
+.barra100-trilha{display:flex;gap:2px;height:22px}
+.barra100-trilha .seg{display:block;height:100%}
+.barra100-trilha .seg:first-child{border-radius:4px 0 0 4px}
+.barra100-trilha .seg:last-child{border-radius:0 4px 4px 0}
+.barra100-rotulos{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-2);margin-top:3px}
+.legenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--ink-2);margin:4px 0 12px}
+.legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+
+.detalhes{margin-top:12px}
+.detalhes summary{cursor:pointer;font-size:.78rem;color:var(--ink-2);padding:4px 0;list-style:none;display:flex;align-items:center;gap:6px}
+.detalhes summary::-webkit-details-marker{display:none}
+.detalhes summary::before{content:"▸";display:inline-block;transition:transform .15s}
+.detalhes[open] summary::before{transform:rotate(90deg)}
+.lista-janela{border:1px solid var(--grid);border-radius:8px;max-height:150px;overflow:auto;margin-top:6px}
+.lista-janela table{width:100%;border-collapse:collapse;font-size:.74rem}
+.lista-janela th{position:sticky;top:0;background:var(--surface);text-align:left;color:var(--ink-2);padding:5px 8px;border-bottom:1px solid var(--grid)}
+.lista-janela td{padding:4px 8px;border-bottom:1px solid var(--grid)}
+/* tooltip */
+#tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:.72rem;
+  padding:5px 8px;border-radius:6px;opacity:0;transition:opacity .08s;z-index:10;max-width:260px}
+
+@media (max-width:900px){
+  .grade{grid-template-columns:1fr}.span2{grid-column:auto}
+  .dois-paineis{grid-template-columns:1fr}.faixas{flex-direction:row;flex-wrap:wrap}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+[hidden]{display:none!important}
+.pagina .subnav-site{max-width:none;padding:0;margin:0 0 14px}
+.subnav-site{padding-left:0;padding-right:0;margin:0 0 14px}
+.cod{display:inline-block;font-size:.72rem;font-weight:700;color:var(--accent);background:var(--grid);border-radius:6px;padding:2px 7px;margin-bottom:6px;align-self:flex-start}
+.cartao{display:flex;flex-direction:column}
+.cartao.inteiro{grid-column:1/-1}
+.cartao h2{margin-bottom:4px}
+.pergunta{margin:0 0 12px;color:var(--ink-2);font-size:.82rem;line-height:1.45}
+.tenue{font-weight:400;color:var(--ink-3)}
+.glossario{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:12px}
+.termo{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.termo b{display:block;font-size:.82rem;margin-bottom:3px}
+.termo span{color:var(--ink-2);font-size:.78rem;line-height:1.4}
+.grupo-tit{display:flex;align-items:center;gap:8px;font-size:.8rem;font-weight:700;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 8px}
+.grupo-tit::after{content:"";flex:1;height:1px;background:var(--grid)}
+.fluxo{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:stretch;gap:6px;margin-bottom:10px}
+.passo{border:1px solid var(--grid);border-radius:8px;padding:8px 10px}
+.passo small{display:block;font-size:.66rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+.passo p{margin:0;font-size:.78rem;line-height:1.35}
+.seta{align-self:center;color:var(--ink-3)}
+.formula{font-family:ui-monospace,Consolas,monospace;font-size:.76rem;background:var(--page);border-radius:6px;padding:6px 8px;margin:0 0 10px}
+.criterios{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:6px}
+.crit{display:inline-flex;align-items:center;gap:6px;font-size:.74rem;color:var(--ink-2);border:1px solid var(--grid);border-radius:999px;padding:3px 9px 3px 4px}
+.ic{display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;color:#fff;font-size:.6rem}
+.ok{background:#0ca30c}.alerta{background:#fab219}.erro{background:#d03b3b}.info{background:var(--c-reprov)}
+.testes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.teste{border:1px solid var(--grid);border-radius:8px;padding:10px 12px}
+.teste h3{font-size:.8rem;margin:0 0 6px}
+.teste ol{margin:0;padding-left:18px;font-size:.76rem;color:var(--ink-2);line-height:1.5}
+.teste ol b{color:var(--ink);font-weight:600}
+.cartao .detalhes{margin-top:auto;padding-top:8px}
+.detalhes ul{margin:4px 0 0;padding-left:18px;font-size:.76rem;color:var(--ink-2);line-height:1.5}
+.excl{margin-bottom:12px}
+.funil{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px}
+.etapa{border:1px solid var(--grid);border-radius:8px;padding:10px 12px}
+.etapa small{font-size:.68rem;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em}
+.etapa .num{margin:2px 0 6px;font-size:1.6rem;font-weight:600}
+.etapa .num span{font-size:.85rem;color:var(--ink-3);font-weight:400}
+.trilha{display:flex;gap:2px;height:10px}
+.trilha span{display:block;height:100%}
+.trilha span:first-child{border-radius:4px 0 0 4px}.trilha span:last-child{border-radius:0 4px 4px 0}
+.leg{margin:5px 0 0;font-size:.74rem;color:var(--ink-2)}
+.lista-janela{max-height:240px}
+.lista-janela td{white-space:nowrap}
+@media (max-width:900px){
+  .testes,.funil{grid-template-columns:1fr}
+  .fluxo{grid-template-columns:1fr}.seta{transform:rotate(90deg);justify-self:center}
+}
+</style>
+<style>
+  .subnav-site {
+    display: flex;
+    gap: 0;
+    padding: 10px 20px 0;
+    max-width: 920px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.8rem;
+  }
+  .subnav-site a {
+    padding: 5px 12px;
+    text-decoration: none;
+    color: #52514e;
+    border: 1px solid #c3c2b7;
+    background: transparent;
+  }
+  .subnav-site a:first-child { border-radius: 6px 0 0 6px; }
+  .subnav-site a:last-child { border-radius: 0 6px 6px 0; border-left: none; }
+  .subnav-site a:hover { background: #e1e0d9; }
+  .subnav-site a[aria-current="page"] {
+    background: #52514e;
+    border-color: #52514e;
+    color: #fff;
+    font-weight: 600;
+  }
+  /* Modo escuro do navegador: a nav principal (nav_site.py) e esta
+     sub-navegação ganham cores próprias -- sem isso o botão ativo da nav
+     principal (fundo #0b0b0b) some no fundo escuro. Vem depois do CSS de
+     nav_site.py, então sobrescreve com a mesma especificidade. */
+  @media (prefers-color-scheme: dark) {
+    .nav-site a { color: #c3c2b7; }
+    .nav-site a:hover { background: #2c2c2a; }
+    .nav-site a[data-pagina="metodologia"] { background: #fff; color: #0b0b0b; }
+    .subnav-site a { color: #c3c2b7; border-color: #4b4b47; }
+    .subnav-site a:hover { background: #2c2c2a; }
+    .subnav-site a[aria-current="page"] { background: #c3c2b7; border-color: #c3c2b7; color: #0b0b0b; }
+  }
+</style>
+
+<style>
+  .nav-site {
+    display: flex;
+    gap: 4px;
+    padding: 14px 20px 0;
+    max-width: 920px;
+    margin: 0 auto;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 0.85rem;
+  }
+  .nav-site a {
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #52514e;
+  }
+  .nav-site a:hover { background: #e1e0d9; }
+  .nav-site a[data-pagina="metodologia"] {
+    background: #0b0b0b;
+    color: #fff;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<nav class="nav-site">
+  <a href="hidrometria.html" data-pagina="hidrometria">Hidrologia</a>
+  <a href="meteorologia.html" data-pagina="meteorologia">Meteorologia</a>
+  <a href="metodologia.html" data-pagina="metodologia">Metodologia adotada</a>
+</nav>
+
+<div class="pagina">
+  <nav class="subnav-site" aria-label="Seção">
+    <a href="#todos" data-visao="todos">Todos</a>
+    <a href="#hidrologia" data-visao="hidrologia">Hidrologia</a>
+    <a href="#meteorologia" data-visao="meteorologia">Meteorologia</a>
+  </nav>
+  <div class="cabecalho">
+    <h1>Metodologia adotada</h1>
+    <p>Como cada indicador é calculado · revisado em 08/10/2026</p>
+  </div>
+
+  
+<section class="cartao excl" data-area="hidrologia" aria-labelledby="tex">
+  <span class="cod">Hidrologia · Frente 1</span>
+  <h2 id="tex">Quais estações entram nas análises?</h2>
+  <p class="pergunta">A Frente 1 tem 71 estações. Algumas ficam fora do cálculo porque não têm como gerar dado: estão desinstaladas, fora de operação ou não medem nível.</p>
+  
+    <div class="funil">
+      <div class="etapa"><small>Chuva</small><p class="num">66<span> de 71</span></p>
+        <div class="trilha"><span style="width:92.96%;background:var(--c-aprov)"></span><span style="width:7.04%;background:var(--c-neutro)"></span></div>
+        <p class="leg">5 excluídas</p></div>
+      <div class="etapa"><small>Nível</small><p class="num">58<span> de 71</span></p>
+        <div class="trilha"><span style="width:81.69%;background:var(--c-aprov)"></span><span style="width:11.27%;background:var(--c-neutro)"></span><span style="width:7.04%;background:var(--c-reprov)"></span></div>
+        <p class="leg">8 inoperantes + 5 só pluviométricas</p></div>
+    </div>
+  <details class="detalhes" open><summary>Ver estações excluídas (13)</summary>
+    <div class="lista-janela" tabindex="0" aria-label="Estações excluídas">
+      <table><thead><tr><th>Código</th><th>Chuva</th><th>Nível</th><th>Motivo</th></tr></thead>
+      <tbody><tr><td>40100100</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>53511000</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>54195040</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>54193050</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>54770100</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>56988550</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>61370000</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>61793990</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>2042051</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2043133</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2044079</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142096</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142097</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr></tbody></table>
+    </div>
+  </details>
+</section>
+  <section class="glossario" data-area="hidrologia" aria-label="Termos rápidos"><div class="termo"><b>96 leituras/dia</b><span>Uma leitura a cada 15 min em 24 h. É a base do 2.2 e do teste de persistência.</span></div><div class="termo"><b>Leitura coletada</b><span>Chegou à plataforma com valor. Leituras em branco contam só no 2.2.</span></div><div class="termo"><b>Leitura consistida</b><span>Coletada que passou pelo teste e saiu aprovada ou reprovada.</span></div><div class="termo"><b>z-score (IC 95%)</b><span>Aprovada se estiver dentro de média ± 1,96 desvio da própria estação.</span></div></section>
+
+  <div data-area="hidrologia">
+    <p class="grupo-tit">Hidrologia</p>
+    <div class="grade">
+<section class="cartao" data-area="hidrologia">
+  <span class="cod">2.1</span>
+  <h2>Atraso na transmissão</h2>
+  <p class="pergunta">O dado chega a tempo? Mede a demora entre a última leitura do pacote e o envio pelo satélite.</p>
+  <div class="fluxo">
+    <div class="passo"><small>Fonte</small><p>API ANA (rota detalhada)</p></div><span class="seta">→</span>
+    <div class="passo"><small>Cálculo</small><p>Envio do pacote − última leitura</p></div><span class="seta">→</span>
+    <div class="passo"><small>Resultado</small><p>No horário ou atrasado</p></div>
+  </div>
+  <div class="criterios">
+    <span class="crit"><span class="ic ok">✓</span>Até 30 min: no horário</span>
+    <span class="crit"><span class="ic erro">✕</span>Mais de 30 min: atraso</span>
+  </div>
+  <details class="detalhes"><summary>Saiba mais</summary>
+    <ul><li>O satélite transmite em pacotes de 4 leituras.</li><li>Fonte de referência: Hidrotelemetria.</li></ul></details>
+</section>
+
+<section class="cartao span2" data-area="hidrologia">
+  <span class="cod">2.2</span>
+  <h2>Disponibilidade de dados</h2>
+  <p class="pergunta">Quantas das leituras esperadas realmente chegaram com valor?</p>
+  <div class="fluxo">
+    <div class="passo"><small>Fonte</small><p>API Dados históricos (webservice)</p></div><span class="seta">→</span>
+    <div class="passo"><small>Cálculo diário</small><p>Leituras com valor ÷ 96 × 100</p></div><span class="seta">→</span>
+    <div class="passo"><small>Por estação</small><p>Média dos dias do período</p></div>
+  </div>
+  <div class="criterios">
+    <span class="crit"><span class="ic info">≈</span>Nível: estações plu e flu</span>
+    <span class="crit"><span class="ic info">☂</span>Chuva: plu + flu e só plu</span>
+    <span class="crit"><span class="ic alerta">●</span>Último dia: esperado proporcional ao horário</span>
+  </div>
+  <details class="detalhes"><summary>Saiba mais</summary>
+    <ul><li>Nível e chuva são calculados separadamente.</li>
+        <li>O último dia da série ainda não terminou, então o esperado é proporcional à hora da última leitura.</li></ul></details>
+</section>
+
+<section class="cartao inteiro" data-area="hidrologia">
+  <span class="cod">2.8</span>
+  <h2>Consistência de dados</h2>
+  <p class="pergunta">O valor que chegou faz sentido? Cada leitura coletada passa por testes e sai aprovada ou reprovada.</p>
+  <p class="formula">nota = leituras consistidas ÷ leituras coletadas (soma da rede)</p>
+  <div class="testes">
+    <div class="teste">
+      <h3>☂ Chuva <span class="tenue">· acumulado mensal</span></h3>
+      <ol>
+        <li><b>Valores impossíveis:</b> &lt; 0 ou &gt; 1000 (volume máximo do coletor)</li>
+        <li><b>MERGE (CPTEC/INPE):</b> compara o pluviômetro com o satélite (informativo, fora da nota)</li>
+      </ol>
+    </div>
+    <div class="teste">
+      <h3>≈ Nível</h3>
+      <ol>
+        <li><b>Valores impossíveis</b></li>
+        <li><b>Range:</b> faixa oficial (mín./máx.) quando existe; senão z-score ± 1,96 desvio</li>
+        <li><b>Persistência (dado travado):</b> desvio das últimas 96 leituras &lt; 1% do desvio da estação → reprovada</li>
+      </ol>
+    </div>
+  </div>
+  <details class="detalhes"><summary>Por que faixa oficial + z-score?</summary>
+    <ul><li>A faixa oficial traz o conhecimento hidrológico de cada local.</li>
+        <li>O z-score dá um critério estatístico objetivo, com os dados da própria estação, para separar valores apenas atípicos (suspeitos) de valores muito fora do padrão (reprovados).</li>
+        <li>A persistência é testada só em leituras aprovadas no Range.</li></ul></details>
+</section>
+</div>
+  </div>
+  <div data-area="meteorologia">
+    <p class="grupo-tit">Meteorologia</p>
+    <div class="grade">
+<section class="cartao" data-area="meteorologia">
+  <span class="cod">4.1</span>
+  <h2>Previsões do tempo</h2>
+  <p class="pergunta">A previsão foi publicada todos os dias?</p>
+  <p class="formula">arquivos publicados ÷ dias corridos</p>
+  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · pasta de previsões do ano</span></div>
+</section>
+<section class="cartao" data-area="meteorologia">
+  <span class="cod">4.2</span>
+  <h2>Monitoramento e alertas</h2>
+  <p class="pergunta">Em quantos dias houve pelo menos um alerta publicado?</p>
+  <p class="formula">dias com ≥ 1 alerta ÷ dias corridos</p>
+  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · página de alertas de tempestade severa</span></div>
+</section>
+<section class="cartao" data-area="meteorologia">
+  <span class="cod">4.3</span>
+  <h2>Monitoramento climático</h2>
+  <p class="pergunta">O boletim de tendência saiu em todos os meses?</p>
+  <p class="formula">boletins publicados ÷ meses-calendário</p>
+  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · pasta de tendência climática do ano</span></div>
+</section>
+</div>
+  </div>
+</div>
+<script>
+(function(){
+  var ABAS=['todos','hidrologia','meteorologia'];
+  function mostrar(){
+    var aba=(location.hash||'#todos').slice(1);
+    if(ABAS.indexOf(aba)<0) aba='todos';
+    document.querySelectorAll('.subnav-site a').forEach(function(a){
+      if(a.dataset.visao===aba) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
+    });
+    document.querySelectorAll('[data-area]').forEach(function(el){
+      el.hidden=!(aba==='todos'||el.dataset.area===aba);
+    });
+  }
+  window.addEventListener('hashchange',mostrar);
+  mostrar();
+})();
+</script>
+</body>
+</html>
