@@ -237,10 +237,23 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Meteorologia — Contrato de Gestão</h1>
-    <p>Período: 16/09/2026 a 09/10/2026 · atualizado em 09/10/2026</p>
+    <p><span id="periodo-cab">Período: 16/09/2026 a 09/10/2026</span> · atualizado em 09/10/2026 às 16:29</p>
   </div>
   
-  <section class="kpis" aria-label="Resumo das notas">
+  <section class="filtro-datas" aria-label="Filtro de período">
+    <label>Data inicial<input type="date" id="f-ini" value="2026-09-16"
+      min="2026-09-16" max="2026-10-09"></label>
+    <label>Data final<input type="date" id="f-fim" value="2026-10-09"
+      min="2026-09-16" max="2026-10-09"></label>
+    <label>Atalho<select id="f-atalho"><option value="">— mês ou PA —</option><option value="2026-09-16|2026-09-30">1º PA (16/09/2026 a 30/09/2026)</option><option value="2026-10-01|2026-10-09">2º PA (01/10/2026 a 31/12/2026)</option><option value="2026-10-01|2026-10-09">Outubro/2026</option><option value="2026-09-16|2026-09-30">Setembro/2026</option></select></label>
+    <button type="button" id="f-aplicar">Aplicar</button>
+    <button type="button" class="sec" id="f-limpar">Voltar ao acumulado</button>
+    <p class="estado" id="f-estado" aria-live="polite">Mostrando o acumulado do Contrato de Gestão
+      (16/09/2026 a 09/10/2026). Escolha as datas e clique em Aplicar
+      para recalcular as notas de outro período.</p>
+  </section>
+  <div id="avisos"></div>
+  <section class="kpis" id="kpis" aria-label="Resumo das notas">
       <div class="kpi" id="kpi-41">
         <p class="kpi-rotulo">4.1 Previsões do tempo</p>
         <p class="kpi-valor">8<small>/10</small></p>
@@ -264,8 +277,8 @@ body .nav-site, body .subnav-site{max-width:1280px}
     <section class="cartao" aria-labelledby="t41">
       <h2 id="t41">4.1 — Previsões do tempo publicadas</h2>
       <p class="sub">Publicações por dia da semana</p>
-      <p class="resumo-cd"><strong>23</strong> previsões publicadas de <strong>24 previstas (1 por dia, incluindo fins de semana e feriados)</strong> · 95,83% → nota 8/10</p>
-      <div class="colunas" style="gap:8px"><div class="col-item" data-tip="Seg: 3 previsões">
+      <p class="resumo-cd" id="resumo-41"><strong>23</strong> previsões publicadas de <strong>24 previstas (1 por dia, incluindo fins de semana e feriados)</strong> · 95,83% → nota 8/10</p>
+      <div id="graf-41"><div class="colunas" style="gap:8px"><div class="col-item" data-tip="Seg: 3 previsões">
               <span class="col-valor">3</span>
               <span class="col-barra" style="height:63.8%;background:var(--c-aprov)"></span>
             </div><div class="col-item" data-tip="Ter: 2 previsões">
@@ -286,40 +299,40 @@ body .nav-site, body .subnav-site{max-width:1280px}
             </div><div class="col-item" data-tip="Dom: 3 previsões">
               <span class="col-valor">3</span>
               <span class="col-barra" style="height:63.8%;background:var(--c-aprov)"></span>
-            </div></div><div class="col-rotulos" style="gap:8px"><span class="col-rotulo">Seg</span><span class="col-rotulo">Ter</span><span class="col-rotulo">Qua</span><span class="col-rotulo">Qui</span><span class="col-rotulo">Sex</span><span class="col-rotulo">Sáb</span><span class="col-rotulo">Dom</span></div>
+            </div></div><div class="col-rotulos" style="gap:8px"><span class="col-rotulo">Seg</span><span class="col-rotulo">Ter</span><span class="col-rotulo">Qua</span><span class="col-rotulo">Qui</span><span class="col-rotulo">Sex</span><span class="col-rotulo">Sáb</span><span class="col-rotulo">Dom</span></div></div>
     </section>
     <section class="cartao" aria-labelledby="t42">
       <h2 id="t42">4.2 — Monitoramento e alertas</h2>
       <p class="sub">Por mês</p>
-      <p class="resumo-cd"><strong>23</strong> dias com relatório de <strong>24</strong> dias · 355 alertas · 95,83% → nota 8/10</p>
+      <p class="resumo-cd" id="resumo-42"><strong>23</strong> dias com relatório de <strong>24</strong> dias · 355 alertas · 95,83% → nota 8/10</p>
       <div class="dois-graficos">
-        <div><h3>Dias com relatório/alerta</h3><div class="hbarras"><div class="hbarra" data-tip="Set/26: 14 dias"><span class="rot">Set/26</span>
+        <div><h3>Dias com relatório/alerta</h3><div id="graf-42-dias"><div class="hbarras"><div class="hbarra" data-tip="Set/26: 14 dias"><span class="rot">Set/26</span>
               <span class="trilha"><span class="fill" style="width:100.0%"></span></span>
               <span class="val">14</span></div><div class="hbarra" data-tip="Out/26: 9 dias"><span class="rot">Out/26</span>
               <span class="trilha"><span class="fill" style="width:64.3%"></span></span>
-              <span class="val">9</span></div></div></div>
-        <div><h3>Alertas individuais</h3><div class="hbarras"><div class="hbarra" data-tip="Set/26: 199 alertas"><span class="rot">Set/26</span>
+              <span class="val">9</span></div></div></div></div>
+        <div><h3>Alertas individuais</h3><div id="graf-42-alertas"><div class="hbarras"><div class="hbarra" data-tip="Set/26: 199 alertas"><span class="rot">Set/26</span>
               <span class="trilha"><span class="fill" style="width:100.0%"></span></span>
               <span class="val">199</span></div><div class="hbarra" data-tip="Out/26: 156 alertas"><span class="rot">Out/26</span>
               <span class="trilha"><span class="fill" style="width:78.4%"></span></span>
-              <span class="val">156</span></div></div></div>
+              <span class="val">156</span></div></div></div></div>
       </div>
     </section>
     <section class="cartao" aria-labelledby="t43">
       <h2 id="t43">4.3 — Monitoramento climático</h2>
       <p class="sub">Boletins de tendência climática por mês</p>
-      <p class="resumo-cd"><strong>1</strong> boletins de <strong>2</strong> meses esperados · 50,00% → nota 0/10</p>
-      <div class="colunas" style="gap:8px"><div class="col-item" data-tip="Set/26: 1 boletim(ns)">
+      <p class="resumo-cd" id="resumo-43"><strong>1</strong> boletins de <strong>2</strong> meses esperados · 50,00% → nota 0/10</p>
+      <div id="graf-43"><div class="colunas" style="gap:8px"><div class="col-item" data-tip="Set/26: 1 boletim(ns)">
               <span class="col-valor">1</span>
               <span class="col-barra" style="height:85.0%;background:var(--c-aprov)"></span>
             </div><div class="col-item" data-tip="Out/26: 0 boletim(ns)">
               <span class="col-valor">0</span>
               <span class="col-barra" style="height:0.5%;background:var(--c-aprov)"></span>
-            </div></div><div class="col-rotulos" style="gap:8px"><span class="col-rotulo">Set/26</span><span class="col-rotulo">Out/26</span></div>
+            </div></div><div class="col-rotulos" style="gap:8px"><span class="col-rotulo">Set/26</span><span class="col-rotulo">Out/26</span></div></div>
       <details class="detalhes">
-        <summary>Ver boletins publicados (1)</summary>
+        <summary id="bol-titulo">Ver boletins publicados (1)</summary>
         <div class="lista-janela" tabindex="0" aria-label="Boletins publicados">
-          <table><thead><tr><th>Criado em</th><th>Boletim</th></tr></thead><tbody><tr><td>24/09/2026 09:11</td><td>TENDENCIA_CLIMATICA_OND_2026</td></tr></tbody></table>
+          <table><thead><tr><th>Criado em</th><th>Boletim</th></tr></thead><tbody id="bol-corpo"><tr><td>24/09/2026 09:11</td><td>TENDENCIA_CLIMATICA_OND_2026</td></tr></tbody></table>
         </div>
       </details>
     </section>
@@ -360,6 +373,161 @@ body .nav-site, body .subnav-site{max-width:1280px}
     tip.style.left=Math.min(ev.clientX+12,window.innerWidth-270)+'px';
     tip.style.top=(ev.clientY+14)+'px';tip.style.opacity=1;
   });
+})();
+</script>
+<script type="application/json" id="dados-filtro">{"versao":1,"modo":"cg","inicio_cg":"2026-09-16","fim":"2026-10-09","previsoes":["2026-09-16","2026-09-17","2026-09-18","2026-09-19","2026-09-20","2026-09-21","2026-09-22","2026-09-23","2026-09-24","2026-09-25","2026-09-26","2026-09-27","2026-09-28","2026-09-29","2026-09-30","2026-10-01","2026-10-02","2026-10-03","2026-10-04","2026-10-05","2026-10-07","2026-10-08","2026-10-09"],"alertas":[["2026-09-16",13],["2026-09-17",11],["2026-09-20",3],["2026-09-21",1],["2026-09-21",1],["2026-09-22",26],["2026-09-23",25],["2026-09-24",14],["2026-09-25",18],["2026-09-26",1],["2026-09-27",20],["2026-09-28",17],["2026-09-29",14],["2026-09-30",35],["2026-10-01",42],["2026-10-02",24],["2026-10-03",5],["2026-10-04",23],["2026-10-05",10],["2026-10-06",27],["2026-10-07",18],["2026-10-08",5],["2026-10-09",2]],"boletins":[["2026-09-24","24/09/2026 09:11","TENDENCIA_CLIMATICA_OND_2026"]],"tabela":[[100.0,10],[95.0,8],[90.0,6],[0.0,0]],"avisos":[],"texto_base":"o acumulado do Contrato de Gestão","rotulo_voltar":"Voltar ao acumulado","rotulo_atalho":"— mês ou PA —","atalhos":[{"rotulo":"1º PA (16/09/2026 a 30/09/2026)","inicio":"2026-09-16","fim":"2026-09-30"},{"rotulo":"2º PA (01/10/2026 a 31/12/2026)","inicio":"2026-10-01","fim":"2026-10-09"},{"rotulo":"Outubro/2026","inicio":"2026-10-01","fim":"2026-10-09"},{"rotulo":"Setembro/2026","inicio":"2026-09-16","fim":"2026-09-30"}]}</script>
+<script>var MotorMeteo = (function(){
+  "use strict";
+  // round()/format do Python (mesma função do MotorCG): arredondamento correto, empate exato -> par
+  function fixo(x, d){
+    if(x !== x) return 'nan';
+    var neg = x < 0 || (x === 0 && 1/x < 0); var ax = Math.abs(x);
+    var s = ax.toFixed(d), s1 = ax.toFixed(d+1);
+    if(s1.charAt(s1.length-1) === '5'){
+      var exato = ax.toFixed(Math.min(d+40, 100)), z = s1 + new Array(exato.length - s1.length + 1).join('0');
+      if(exato === z){
+        var trunc = s1.slice(0, -1); if(trunc.charAt(trunc.length-1) === '.') trunc = trunc.slice(0, -1);
+        var ult = parseInt(trunc.charAt(trunc.length-1), 10);
+        s = (ult % 2 === 0) ? trunc : s;
+      }
+    }
+    return (neg && Number(s) !== 0 ? '-' : '') + s;
+  }
+  function arred(x, d){ return x !== x ? NaN : Number(fixo(x, d)); }
+  function pontuar(p, tabela){ for(var i=0;i<tabela.length;i++){ if(p >= tabela[i][0]) return tabela[i][1]; } return 0; }
+  var DIAS = ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'];
+  var ABREV = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
+  var MES = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  function utc(iso){ var b = iso.split('-'); return Date.UTC(+b[0], +b[1]-1, +b[2]); }
+  function diasEntre(a, b){ return Math.round((utc(b) - utc(a)) / 864e5) + 1; }
+  function semana(iso){ return (new Date(utc(iso)).getUTCDay() + 6) % 7; }  // 0 = segunda (weekday do Python)
+  function br(iso){ return iso.split('-').reverse().join('/'); }
+  function meses(a, b){  // = meteorologia_cg._meses
+    var ya = +a.slice(0,4), ma = +a.slice(5,7), yb = +b.slice(0,4), mb = +b.slice(5,7), out = [];
+    while(ya < yb || (ya === yb && ma <= mb)){ out.push(ya + '-' + (ma < 10 ? '0' : '') + ma); ma++; if(ma > 12){ ma = 1; ya++; } }
+    return out;
+  }
+  function rotMes(k){ return MES[+k.slice(5,7) - 1] + '/' + k.slice(2,4); }
+  function pct2(v){ return fixo(v, 2).replace('.', ',') + '%'; }
+
+  function calcularPeriodo(F, a, b){
+    var dentro = function(iso){ return iso >= a && iso <= b; };
+    // 4.1
+    var prev = F.previsoes.filter(dentro), porDia = [0,0,0,0,0,0,0];
+    prev.forEach(function(iso){ porDia[semana(iso)]++; });
+    var esperadas, texto;
+    if(F.modo === 'cg'){  // = calcular_cd_4_1_todos_os_dias
+      esperadas = diasEntre(a, b);
+      texto = esperadas + ' previstas (1 por dia, incluindo fins de semana e feriados)';
+    } else {              // = calcular_cd_4_1 (dias úteis, sem feriados/facultativos)
+      var nu = {}; (F.nao_uteis || []).forEach(function(d){ nu[d] = 1; });
+      esperadas = 0;
+      for(var t = utc(a), tf = utc(b); t <= tf; t += 864e5){
+        var dt = new Date(t), w = (dt.getUTCDay() + 6) % 7, iso = dt.toISOString().slice(0, 10);
+        if(w < 5 && !nu[iso]) esperadas++;
+      }
+      texto = esperadas + ' dias úteis esperados (sem feriados/facultativos)';
+    }
+    var p41 = esperadas ? arred(prev.length / esperadas * 100, 2) : 0.0, n41 = pontuar(p41, F.tabela);
+    // 4.2
+    var ms = meses(a, b), md = {}, ma = {}, nDias = 0, nAl = 0;
+    ms.forEach(function(m){ md[m] = 0; ma[m] = 0; });
+    F.alertas.forEach(function(x){ if(!dentro(x[0])) return; nDias++; nAl += x[1];
+      var k = x[0].slice(0, 7); if(k in md){ md[k]++; ma[k] += x[1]; } });
+    var dp = diasEntre(a, b), p42 = dp ? arred(nDias / dp * 100, 2) : 0.0, n42 = pontuar(p42, F.tabela);
+    // 4.3
+    var bol = F.boletins.filter(function(x){ return dentro(x[0]); }), pm = {};
+    ms.forEach(function(m){ pm[m] = 0; });
+    bol.forEach(function(x){ var k = x[0].slice(0, 7); pm[k] = (pm[k] || 0) + 1; });
+    var me = (+b.slice(0,4) - +a.slice(0,4)) * 12 + (+b.slice(5,7) - +a.slice(5,7)) + 1;
+    var p43 = me ? arred(bol.length / me * 100, 2) : 0.0, n43 = pontuar(p43, F.tabela);
+    return {
+      periodo: 'Período: ' + br(a) + ' a ' + br(b), avisos: (F.avisos || []).slice(),
+      kpis: [{id: '41', rotulo: '4.1 Previsões do tempo', nota: n41, percentual: p41, detalhe: 'publicadas'},
+             {id: '42', rotulo: '4.2 Monitoramento e alertas', nota: n42, percentual: p42, detalhe: 'dos dias com relatório'},
+             {id: '43', rotulo: '4.3 Monitoramento climático', nota: n43, percentual: p43, detalhe: 'dos boletins mensais'}],
+      ind_4_1: {por_dia_semana: ABREV.map(function(r, i){ return [r, porDia[i]]; }),
+        resumo: '<strong>' + prev.length + '</strong> previsões publicadas de <strong>' + texto + '</strong> · ' +
+                pct2(p41) + ' → nota ' + n41 + '/10'},
+      ind_4_2: {por_mes_dias: ms.map(function(m){ return [rotMes(m), md[m]]; }),
+        por_mes_alertas: ms.map(function(m){ return [rotMes(m), ma[m]]; }),
+        resumo: '<strong>' + nDias + '</strong> dias com relatório de <strong>' + dp + '</strong> dias · ' + nAl +
+                ' alertas · ' + pct2(p42) + ' → nota ' + n42 + '/10'},
+      ind_4_3: {por_mes: Object.keys(pm).sort().map(function(m){ return [rotMes(m), pm[m]]; }),
+        boletins: bol.map(function(x){ return [x[1], x[2]]; }),
+        resumo: '<strong>' + bol.length + '</strong> boletins de <strong>' + me + '</strong> meses esperados · ' +
+                pct2(p43) + ' → nota ' + n43 + '/10'},
+      totais: {'4_1': {publicadas: prev.length, esperadas: esperadas},
+               '4_2': {relatorios: nDias, alertas: nAl, dias_no_periodo: dp},
+               '4_3': {publicados: bol.length, esperados: me}}
+    };
+  }
+  return {calcularPeriodo: calcularPeriodo, fixo: fixo};
+})();
+</script>
+<script>
+(function(){
+  var F=JSON.parse(document.getElementById('dados-filtro').textContent);
+  var M=MotorMeteo, el=function(id){return document.getElementById(id);};
+  var STATUS={10:['#0ca30c','✓','Ótima'],9:['#52c90d','✓','Muito boa'],8:['#fab219','●','Boa'],
+              7:['#ec835a','▲','Regular'],6:['#ec835a','▲','Regular'],0:['#d03b3b','✕','Reprovada']};
+  function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'}[c];});}
+  function kpiHtml(k){var s=STATUS[k.nota]||STATUS[0];
+    return '<div class="kpi" id="kpi-'+esc(k.id)+'"><p class="kpi-rotulo">'+esc(k.rotulo)+'</p>'+
+      '<p class="kpi-valor">'+k.nota+'<small>/10</small></p><p class="kpi-pct">'+M.fixo(k.percentual,1).replace('.',',')+'% '+
+      esc(k.detalhe)+'</p><span class="chip"><span class="chip-icone" style="background:'+s[0]+'">'+s[1]+'</span>'+esc(s[2])+'</span></div>';}
+  function colunas(itens,suf){  // = layout_cg._colunas_contagem_html
+    var mx=Math.max.apply(null,itens.map(function(x){return x[1];}).concat([1]));
+    return '<div class="colunas" style="gap:8px">'+itens.map(function(x){
+      return '<div class="col-item" data-tip="'+esc(x[0])+': '+x[1]+esc(suf)+'"><span class="col-valor">'+x[1]+'</span>'+
+        '<span class="col-barra" style="height:'+Math.max(0.5,x[1]/mx*85).toFixed(1)+'%;background:var(--c-aprov)"></span></div>';}).join('')+
+      '</div><div class="col-rotulos" style="gap:8px">'+itens.map(function(x){return '<span class="col-rotulo">'+esc(x[0])+'</span>';}).join('')+'</div>';}
+  function hbarras(itens,suf){  // = layout_cg._hbarras_html
+    var mx=Math.max.apply(null,itens.map(function(x){return x[1];}).concat([1]));
+    return '<div class="hbarras">'+itens.map(function(x){
+      return '<div class="hbarra" data-tip="'+esc(x[0])+': '+x[1]+esc(suf)+'"><span class="rot">'+esc(x[0])+'</span>'+
+        '<span class="trilha"><span class="fill" style="width:'+(x[1]/mx*100).toFixed(1)+'%"></span></span>'+
+        '<span class="val">'+x[1]+'</span></div>';}).join('')+'</div>';}
+  var IDS=['periodo-cab','avisos','kpis','resumo-41','graf-41','resumo-42','graf-42-dias','graf-42-alertas',
+           'resumo-43','graf-43','bol-titulo','bol-corpo'], original={};
+  IDS.forEach(function(id){ if(el(id)) original[id]=el(id).innerHTML; });
+  function mostrar(d){
+    el('periodo-cab').textContent=d.periodo;
+    el('avisos').innerHTML=d.avisos.map(function(a){return '<div class="aviso">'+esc(a)+'</div>';}).join('');
+    el('kpis').innerHTML=d.kpis.map(kpiHtml).join('');
+    el('resumo-41').innerHTML=d.ind_4_1.resumo; el('graf-41').innerHTML=colunas(d.ind_4_1.por_dia_semana,' previsões');
+    el('resumo-42').innerHTML=d.ind_4_2.resumo;
+    el('graf-42-dias').innerHTML=hbarras(d.ind_4_2.por_mes_dias,' dias');
+    el('graf-42-alertas').innerHTML=hbarras(d.ind_4_2.por_mes_alertas,' alertas');
+    el('resumo-43').innerHTML=d.ind_4_3.resumo; el('graf-43').innerHTML=colunas(d.ind_4_3.por_mes,' boletim(ns)');
+    el('bol-titulo').textContent='Ver boletins publicados ('+d.ind_4_3.boletins.length+')';
+    el('bol-corpo').innerHTML=d.ind_4_3.boletins.map(function(x){return '<tr><td>'+esc(x[0])+'</td><td>'+esc(x[1])+'</td></tr>';}).join('');
+  }
+  function restaurar(){
+    IDS.forEach(function(id){ if(el(id) && id in original) el(id).innerHTML=original[id]; });
+    el('f-ini').value=F.inicio_cg; el('f-fim').value=F.fim; el('f-atalho').value='';
+    var e=el('f-estado'); e.className='estado';
+    e.textContent='Mostrando '+F.texto_base+' ('+F.inicio_cg.split('-').reverse().join('/')+' a '+F.fim.split('-').reverse().join('/')+').';
+  }
+  function aplicar(){
+    var a=el('f-ini').value, b=el('f-fim').value, e=el('f-estado');
+    if(!a||!b){e.textContent='Preencha a data inicial e a final.';return;}
+    if(a<F.inicio_cg) a=F.inicio_cg; if(b>F.fim) b=F.fim;
+    if(a>b){e.className='estado ativo';e.textContent='A data inicial é depois da data final — confira as datas.';return;}
+    el('f-ini').value=a; el('f-fim').value=b;
+    if(a===F.inicio_cg && b===F.fim){restaurar();return;}
+    var d; try{ d=M.calcularPeriodo(F,a,b); }catch(err){ e.className='estado ativo';
+      e.textContent='Não foi possível recalcular este período ('+err.message+').'; return; }
+    mostrar(d);
+    e.className='estado ativo';
+    e.textContent='Período selecionado: '+a.split('-').reverse().join('/')+' a '+b.split('-').reverse().join('/')+
+      ' — as notas e os gráficos do 4.1, 4.2 e 4.3 foram recalculados para este período'+
+      (document.querySelector('.evol')?' (exceto a evolução da nota, que é mensal).':'.');
+  }
+  el('f-aplicar').addEventListener('click',aplicar);
+  el('f-limpar').addEventListener('click',restaurar);
+  el('f-atalho').addEventListener('change',function(){var v=this.value; if(!v) return; var p=v.split('|');
+    el('f-ini').value=p[0]; el('f-fim').value=p[1]; aplicar();});
 })();
 </script>
 </body>
