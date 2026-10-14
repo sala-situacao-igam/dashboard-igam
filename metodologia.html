@@ -254,7 +254,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
   </nav>
   <div class="cabecalho">
     <h1>Metodologia adotada</h1>
-    <p>Como cada indicador é calculado · revisado em 08/10/2026</p>
+    <p>Como cada indicador é calculado · revisado em 14/10/2026</p>
   </div>
 
   
@@ -355,25 +355,50 @@ body .nav-site, body .subnav-site{max-width:1280px}
   <span class="cod">4.1</span>
   <h2>Previsões do tempo</h2>
   <p class="pergunta">A previsão foi publicada todos os dias?</p>
-  <p class="formula">arquivos publicados ÷ dias corridos</p>
-  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · pasta de previsões do ano</span></div>
+  <p class="formula">previsões publicadas ÷ dias corridos (sem desconto de feriados)</p>
+  <div class="criterios">
+    <span class="crit"><span class="ic info">⌕</span>Fonte: SIMGE · pasta de previsões do ano</span>
+    <span class="crit"><span class="ic alerta">!</span>Dias com SIMGE fora do ar ou instável listados como justificativa</span>
+  </div>
+  <details class="detalhes"><summary>Saiba mais</summary>
+    <ul><li>Uma previsão esperada por dia, inclusive fins de semana e feriados.</li>
+        <li>As intercorrências vêm da planilha preenchida pela ferramenta do plantão. Entram só os tipos “SIMGE fora do ar” e “SIMGE instável” (e “Outros” que citem o SIMGE).</li>
+        <li>Dia sem registro de intercorrência = sem problema.</li></ul></details>
 </section>
+
 <section class="cartao" data-area="meteorologia">
   <span class="cod">4.2</span>
   <h2>Monitoramento e alertas</h2>
-  <p class="pergunta">Em quantos dias houve pelo menos um alerta publicado?</p>
-  <p class="formula">dias com ≥ 1 alerta ÷ dias corridos</p>
-  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · página de alertas de tempestade severa</span></div>
+  <p class="pergunta">Os dois plantões de monitoramento de cada dia (diurno e noturno) foram realizados?</p>
+  <p class="formula">plantões realizados ÷ (2 × dias do período)</p>
+  <div class="criterios">
+    <span class="crit"><span class="ic info">⌕</span>Fontes: SIMGE, relatórios dos plantões e arquivos de alerta gerados</span>
+    <span class="crit"><span class="ic alerta">●</span>Plantão do dia atual em andamento: o indicador conta até o dia anterior</span>
+  </div>
+  <details class="detalhes"><summary>Saiba mais</summary>
+    <ul><li>Cada relatório de plantão salvo conta 1 plantão; são esperados 2 por dia.</li>
+        <li>Os alertas são os arquivos de alerta gerados em cada plantão.</li>
+        <li>Dias com menos de 2 plantões aparecem na lista “Plantões a conferir”.</li></ul></details>
 </section>
+
 <section class="cartao" data-area="meteorologia">
   <span class="cod">4.3</span>
   <h2>Monitoramento climático</h2>
   <p class="pergunta">O boletim de tendência saiu em todos os meses?</p>
   <p class="formula">boletins publicados ÷ meses-calendário</p>
-  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Web scraping SIMGE · pasta de tendência climática do ano</span></div>
+  <div class="criterios"><span class="crit"><span class="ic info">⌕</span>Fonte: SIMGE · pasta de tendência climática do ano</span></div>
+</section>
+
+<section class="cartao" data-area="meteorologia">
+  <span class="cod">4.4</span>
+  <h2>Melhorias operacionais internas</h2>
+  <p class="pergunta">Quais melhorias a equipe desenvolveu para a operação?</p>
+  <div class="criterios"><span class="crit"><span class="ic info">▦</span>Fonte: Controle de Melhorias</span></div>
+  <details class="detalhes" open><summary>Melhorias (7)</summary><ul><li>Automação do relatório <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados das estações telemétricas ANA <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados do SIMGE <span class="tenue">· em uso</span></li><li>Automação das análises e apresentação dos indicadores no Dashboard <span class="tenue">· em uso</span></li><li>Desenvolvimento de ferramenta própria para confecção dos produtos meteorológicos <span class="tenue">· em uso</span></li><li>Desenvolvimento de aplicativo para otimização de rotograma (campo hidrometria) <span class="tenue">· em desenvolvimento</span></li><li>Desenvolvimento de um portal próprio para controle de rotinas e avisos <span class="tenue">· em uso</span></li></ul></details>
 </section>
 </div>
   </div>
+
 </div>
 <script>
 (function(){
