@@ -237,7 +237,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Meteorologia — 2026</h1>
-    <p><span id="periodo-cab">Período: 01/01/2026 a 14/10/2026</span> · atualizado em 14/10/2026 às 13:24</p>
+    <p><span id="periodo-cab">Período: 01/01/2026 a 14/10/2026</span> · atualizado em 14/10/2026 às 14:39</p>
   </div>
   
   <section class="filtro-datas" aria-label="Filtro de período">
@@ -257,19 +257,19 @@ body .nav-site, body .subnav-site{max-width:1280px}
       <div class="kpi" id="kpi-41">
         <p class="kpi-rotulo">4.1 Previsões do tempo</p>
         <p class="kpi-valor">10<small>/10</small></p>
-        <p class="kpi-pct">100,5% publicadas</p>
+        <p class="kpi-pct">100,51% publicadas</p>
         <span class="chip"><span class="chip-icone" style="background:#0ca30c">✓</span>Ótima</span>
       </div>
       <div class="kpi" id="kpi-42">
         <p class="kpi-rotulo">4.2 Monitoramento e alertas</p>
         <p class="kpi-valor">0<small>/10</small></p>
-        <p class="kpi-pct">40,4% dos dias com relatório</p>
+        <p class="kpi-pct">40,42% dos dias com relatório</p>
         <span class="chip"><span class="chip-icone" style="background:#d03b3b">✕</span>Reprovada</span>
       </div>
       <div class="kpi" id="kpi-43">
         <p class="kpi-rotulo">4.3 Monitoramento climático</p>
         <p class="kpi-valor">0<small>/10</small></p>
-        <p class="kpi-pct">60,0% dos boletins mensais</p>
+        <p class="kpi-pct">60,00% dos boletins mensais</p>
         <span class="chip"><span class="chip-icone" style="background:#d03b3b">✕</span>Reprovada</span>
       </div>
   </section>
@@ -512,7 +512,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
   function esc(t){return String(t).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#x27;'}[c];});}
   function kpiHtml(k){var s=STATUS[k.nota]||STATUS[0];
     return '<div class="kpi" id="kpi-'+esc(k.id)+'"><p class="kpi-rotulo">'+esc(k.rotulo)+'</p>'+
-      '<p class="kpi-valor">'+k.nota+'<small>/10</small></p><p class="kpi-pct">'+M.fixo(k.percentual,1).replace('.',',')+'% '+
+      '<p class="kpi-valor">'+k.nota+'<small>/10</small></p><p class="kpi-pct">'+M.fixo(k.percentual,2).replace('.',',')+'% '+
       esc(k.detalhe)+'</p><span class="chip"><span class="chip-icone" style="background:'+s[0]+'">'+s[1]+'</span>'+esc(s[2])+'</span></div>';}
   function colunas(itens,suf){  // = layout_cg._colunas_contagem_html
     var mx=Math.max.apply(null,itens.map(function(x){return x[1];}).concat([1]));
