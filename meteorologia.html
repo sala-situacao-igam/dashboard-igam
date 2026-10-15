@@ -238,7 +238,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Meteorologia — 2026</h1>
-    <p><span id="periodo-cab">Período: 01/01/2026 a 15/10/2026</span> · atualizado em 15/10/2026 às 11:52</p>
+    <p><span id="periodo-cab">Período: 01/01/2026 a 15/10/2026</span> · atualizado em 15/10/2026 às 13:33</p>
   </div>
   
   <section class="filtro-datas" aria-label="Filtro de período">
@@ -433,12 +433,17 @@ body .nav-site, body .subnav-site{max-width:1280px}
   function calcularPeriodo(F, a, b){
     var dentro = function(iso){ return iso >= a && iso <= b; };
     // 4.1
-    var prev = F.previsoes.filter(dentro), porDia = [0,0,0,0,0,0,0];
+    // 15/10/2026 (CG): dias com SIMGE fora do ar/instável fora do cálculo (= meteorologia_cg.montar_dados_cg)
+    var ex41 = {}, nEx = 0;
+    if(F.modo === 'cg') (F.intercorrencias || []).forEach(function(x){
+      if(dentro(x.data) && x.indicadores.indexOf('4.1') >= 0 && !ex41[x.data]){ ex41[x.data] = 1; nEx++; } });
+    var prev = F.previsoes.filter(function(iso){ return dentro(iso) && !ex41[iso]; }), porDia = [0,0,0,0,0,0,0];
     prev.forEach(function(iso){ porDia[semana(iso)]++; });
     var esperadas, texto;
     if(F.modo === 'cg'){  // = calcular_cd_4_1_todos_os_dias
-      esperadas = diasEntre(a, b);
-      texto = esperadas + ' previstas (1 por dia, incluindo fins de semana e feriados)';
+      esperadas = diasEntre(a, b) - nEx;
+      texto = esperadas + ' previstas (1 por dia, incluindo fins de semana e feriados)' +
+              (nEx ? '; ' + nEx + ' dia(s) com SIMGE fora do ar/instável fora do cálculo' : '');
     } else {              // = calcular_cd_4_1 (dias úteis, sem feriados/facultativos)
       var nu = {}; (F.nao_uteis || []).forEach(function(d){ nu[d] = 1; });
       esperadas = 0;
