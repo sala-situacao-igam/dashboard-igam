@@ -254,7 +254,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
   </nav>
   <div class="cabecalho">
     <h1>Metodologia adotada</h1>
-    <p>Como cada indicador é calculado · revisado em 14/10/2026</p>
+    <p>Como cada indicador é calculado · revisado em 22/10/2026</p>
   </div>
 
   
@@ -274,7 +274,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
   <details class="detalhes" open><summary>Ver estações excluídas (13)</summary>
     <div class="lista-janela" tabindex="0" aria-label="Estações excluídas">
       <table><thead><tr><th>Código</th><th>Chuva</th><th>Nível</th><th>Motivo</th></tr></thead>
-      <tbody><tr><td>40100100</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>53511000</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>54195040</td><td>✓ entra</td><td>✕ fora</td><td>Fora de operação (nível)</td></tr><tr><td>54193050</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>54770100</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>56988550</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>61370000</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>61793990</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada</td></tr><tr><td>2042051</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2043133</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2044079</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142096</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142097</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr></tbody></table>
+      <tbody><tr><td>40100100</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar: instalada no rio são francisco, e não no rio pará</td></tr><tr><td>53511000</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54195040</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54193050</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>54770100</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>56988550</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>61370000</td><td>✕ fora</td><td>✕ fora</td><td>Danificada em acidente</td></tr><tr><td>61793990</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (estação furtada)</td></tr><tr><td>2042051</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2043133</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2044079</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142096</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142097</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr></tbody></table>
     </div>
   </details>
 </section>
@@ -358,11 +358,12 @@ body .nav-site, body .subnav-site{max-width:1280px}
   <p class="formula">previsões publicadas ÷ dias corridos (sem desconto de feriados)</p>
   <div class="criterios">
     <span class="crit"><span class="ic info">⌕</span>Fonte: SIMGE · pasta de previsões do ano</span>
-    <span class="crit"><span class="ic alerta">!</span>Dias com SIMGE fora do ar ou instável listados como justificativa</span>
+    <span class="crit"><span class="ic alerta">!</span>Dias em que o SIMGE ficou fora do ar/instável não entram no cálculo</span>
   </div>
   <details class="detalhes"><summary>Saiba mais</summary>
     <ul><li>Uma previsão esperada por dia, inclusive fins de semana e feriados.</li>
         <li>As intercorrências vêm da planilha preenchida pela ferramenta do plantão. Entram só os tipos “SIMGE fora do ar” e “SIMGE instável” (e “Outros” que citem o SIMGE).</li>
+        <li>Esses dias saem do total de previsões esperadas e aparecem listados no painel.</li>
         <li>Dia sem registro de intercorrência = sem problema.</li></ul></details>
 </section>
 
@@ -393,8 +394,23 @@ body .nav-site, body .subnav-site{max-width:1280px}
   <span class="cod">4.4</span>
   <h2>Melhorias operacionais internas</h2>
   <p class="pergunta">Quais melhorias a equipe desenvolveu para a operação?</p>
-  <div class="criterios"><span class="crit"><span class="ic info">▦</span>Fonte: Controle de Melhorias</span></div>
-  <details class="detalhes" open><summary>Melhorias (7)</summary><ul><li>Automação do relatório <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados das estações telemétricas ANA <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados do SIMGE <span class="tenue">· em uso</span></li><li>Automação das análises e apresentação dos indicadores no Dashboard <span class="tenue">· em uso</span></li><li>Desenvolvimento de ferramenta própria para confecção dos produtos meteorológicos <span class="tenue">· em uso</span></li><li>Desenvolvimento de aplicativo para otimização de rotograma (campo hidrometria) <span class="tenue">· em desenvolvimento</span></li><li>Desenvolvimento de um portal próprio para controle de rotinas e avisos <span class="tenue">· em uso</span></li></ul></details>
+  <p class="formula"> 100% (nota 10)</p>
+  <div class="criterios">
+    <span class="crit"><span class="ic info">▦</span>Fonte: Controle de Melhorias</span>
+    <span class="crit"><span class="ic alerta">●</span>Nota a partir de out/2026 (1º PA sem nota)</span>
+  </div>
+  <details class="detalhes" open><summary>Melhorias (9)</summary><ul><li>Automação do relatório <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados das estações telemétricas ANA <span class="tenue">· em uso</span></li><li>Automação da ingestão de dados do SIMGE <span class="tenue">· em uso</span></li><li>Automação das análises e apresentação dos indicadores no Dashboard <span class="tenue">· em uso</span></li><li>Desenvolvimento de ferramenta própria para confecção dos produtos meteorológicos <span class="tenue">· em uso</span></li><li>Desenvolvimento de aplicativo para otimização de rotograma (campo hidrometria) <span class="tenue">· em desenvolvimento</span></li><li>Desenvolvimento de um portal próprio para controle de rotinas e avisos <span class="tenue">· em uso</span></li><li>Alteração do horário do desenvolvimento da previsão <span class="tenue">· em uso</span></li><li>Ferramenta de cadastro dos observadores <span class="tenue">· em uso</span></li></ul></details>
+</section>
+<section class="cartao" data-area="meteorologia">
+  <span class="cod">4.6</span>
+  <h2>Percentual de produtos hidrometeorológicos elaborados</h2>
+  <p class="pergunta">Quais produtos hidrometeorológicos especiais (relatórios, boletins, notas técnicas) a equipe elaborou?</p>
+  <p class="formula"> 100% (nota 10)</p>
+  <div class="criterios">
+    <span class="crit"><span class="ic info">▦</span>Fonte: planilha de Produtos especiais</span>
+    <span class="crit"><span class="ic alerta">●</span>Nota a partir de out/2026 (1º PA sem nota)</span>
+  </div>
+  <details class="detalhes" open><summary>Produtos (10)</summary><ul><li>Previsão do Tempo ENAMED <span class="tenue">· 13/09/2026</span></li><li>Aviso Meteorológico de Temperaturas Elevadas <span class="tenue">· 28/09/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 01/10/2026</span></li><li>Aviso Meteorológico de Acumulados Significativos <span class="tenue">· 02/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 02/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 05/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 07/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 08/10/2026</span></li><li>Aviso Meteorológico de Tempestade Severa <span class="tenue">· 14/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 15/10/2026</span></li></ul></details>
 </section>
 </div>
   </div>
