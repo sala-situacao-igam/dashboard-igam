@@ -72,6 +72,7 @@ h3{margin:0 0 8px;font-size:.95rem}
 .leaflet-tooltip{background:var(--surface);color:var(--ink);border-color:var(--border)}
 .leaflet-bar a{background:var(--surface);color:var(--ink);border-color:var(--border)}
 .legenda{display:flex;align-items:center;gap:6px;font-size:.72rem;color:var(--ink-3);margin-top:6px}
+.explica-mapa{margin:6px 0 0;padding:6px 9px;border-left:3px solid #d9480f;background:var(--grid);border-radius:0 6px 6px 0;font-size:.74rem;line-height:1.4;color:var(--ink-2)}.explica-mapa b{font-weight:600;color:var(--ink)}
 .atalhos{margin:4px 0 0;font-size:.72rem;color:var(--ink-3)}.atalhos b{font-weight:600}
 .sel-mun{grid-column:1/-1;font-size:.78rem;color:var(--ink-2);display:none;flex-wrap:wrap;gap:6px;align-items:center}
 .chip{background:var(--grid);border-radius:12px;padding:2px 8px;cursor:pointer}.chip:hover{text-decoration:line-through}
@@ -177,7 +178,7 @@ td.n,th.n{text-align:right}
 </nav>
 <div class="pagina">
 <div class="cabecalho"><h1>Meteorologia — Alertas emitidos</h1>
-<p>Período com alertas: 14/09/2026 a 23/10/2026 · Atualizado em 23/10/2026 09:18</p></div>
+<p>Período com alertas: 14/09/2026 a 23/10/2026 · Atualizado em 23/10/2026 09:44</p></div>
 
 <div class="card filtros">
  <div><label for="f-ini">Data inicial</label><input type="date" id="f-ini"></div>
@@ -202,8 +203,8 @@ td.n,th.n{text-align:right}
 
 <div class="g2">
  <div class="card cartao-mapa" id="cartao-mapa"><div class="topo-mapa"><h3 style="margin:0;display:flex;align-items:center;gap:6px">Minas Gerais — alertas por município<button class="btn-tela" id="btn-tela" title="Tela cheia (Esc para sair)" aria-label="Tela cheia"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path class="abre" d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/><path class="fecha" d="M20 10h-6V4M4 14h6v6M14 10l7-7M10 14l-7 7"/></svg></button></h3>
-  <div style="display:flex;gap:8px;flex-wrap:wrap"><div class="seg" id="f-cursor" title="Seta: clicar nos municípios para filtrar · Mãozinha: arrastar o mapa"><button data-v="seta" class="on">➚ Selecionar</button><button data-v="mao">✋ Navegar</button></div><div class="seg" id="f-mapa" style="width:240px"><button data-v="calor" class="on">Mapa de calor</button><button data-v="mun">Por município</button></div></div></div>
-  <div id="mapa"></div><div class="legenda">menos<span></span>mais alertas · Clique em um município ou mais municípios para filtrar</div><p class="atalhos">Atalhos: <b>Shift + clique</b> adiciona ou retira municípios da seleção (no mapa e no ranking) · <b>Ctrl + Z</b> desfaz o último filtro · clique numa barra ou fatia dos gráficos para filtrar por ela</p></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><div class="seg" id="f-cursor" title="Seta: clicar nos municípios para filtrar · Mãozinha: arrastar o mapa"><button data-v="seta" class="on">➚ Selecionar</button><button data-v="mao">✋ Navegar</button></div><div class="seg" id="f-mapa" style="width:240px"><button data-v="mun" class="on">Por município</button><button data-v="calor">Mapa de calor</button></div></div></div>
+  <div id="mapa"></div><div class="legenda">menos<span></span>mais alertas · Clique em um município ou mais municípios para filtrar</div><p class="explica-mapa" id="explica-mapa"></p><p class="atalhos">Atalhos: <b>Shift + clique</b> adiciona ou retira municípios da seleção (no mapa e no ranking) · <b>Ctrl + Z</b> desfaz o último filtro · clique numa barra ou fatia dos gráficos para filtrar por ela</p></div>
  <div class="card cartao-ranking"><h3>Ranking de municípios <small style="color:var(--ink-3);font-weight:400">(clique para filtrar)</small></h3><div class="ranking" id="ranking"></div></div>
 </div>
 
@@ -251,7 +252,7 @@ opcoes('f-dur',D.dur.map(String),'Todos',v=>fmtH(+v));
 const dMin=L_.reduce((m,a)=>a.d<m?a.d:m,'9999'), dMax=L_.reduce((m,a)=>a.d>m?a.d:m,'0000');
 function datasPadrao(){$('f-ini').value=L_.length?dMin:'';$('f-fim').value=L_.length?dMax:''}
 datasPadrao();
-let agr='d', modoMapa='calor';
+let agr='d', modoMapa='mun';
 function seg(id,cb){document.querySelectorAll(`#${id} button`).forEach(b=>b.onclick=()=>{document.querySelectorAll(`#${id} button`).forEach(x=>x.classList.toggle('on',x===b));cb(b.dataset.v);desenhar()})}
 seg('f-agr',v=>agr=v); seg('f-mapa',v=>modoMapa=v);
 ['f-ini','f-fim','f-meso','f-mun','f-tipo','f-fen','f-dur'].forEach(i=>$(i).onchange=desenhar);
@@ -356,6 +357,9 @@ function desenhar(){
   l.off('click');if(e)l.on('click',ev=>filtrarMun(e[0].nome,ev))});
  contorno.eachLayer(l=>l.setStyle({color:css('--m-uf')}));
  const comCoord=Object.entries(pm).filter(([i])=>MUN[i].la!=null&&visivel(i));
+ $('explica-mapa').innerHTML=modoMapa=='mun'
+  ?'<b>Por município:</b> cada município é pintado pelo seu próprio número de alertas no período filtrado. Use esta visão para saber <b>quais municípios</b> foram mais alertados.'
+  :'<b>Mapa de calor:</b> mostra a <b>concentração de alertas na região</b>, somando os municípios vizinhos. Regiões com muitos municípios pequenos (como Sul de Minas e Zona da Mata) tendem a ficar mais intensas, mesmo que cada município tenha poucos alertas; para o número de cada município, use “Por município”.';
  calor.setLatLngs(modoMapa=='calor'?comCoord.map(([i,o])=>[MUN[i].la,MUN[i].lo,o.n/maxV]):[]);
 
  const rk=Object.entries(pm).sort((a,b)=>b[1].n-a[1].n||MUN[a[0]].nome.localeCompare(MUN[b[0]].nome,'pt'));
