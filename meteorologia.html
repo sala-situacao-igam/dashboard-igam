@@ -242,7 +242,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <div class="pagina">
   <div class="cabecalho">
     <h1>Meteorologia — 2026</h1>
-    <p><span id="periodo-cab">Período: 01/01/2026 a 26/10/2026</span> · atualizado em 26/10/2026 às 16:52</p>
+    <p><span id="periodo-cab">Período: 01/01/2026 a 26/10/2026</span> · atualizado em 26/10/2026 às 17:09</p>
   </div>
   
   <section class="filtro-datas" aria-label="Filtro de período">
@@ -282,7 +282,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
     <section class="cartao" aria-labelledby="t41">
       <h2 id="t41">4.1 — Previsões do tempo publicadas</h2>
       <p class="sub">Publicações por dia da semana</p>
-      <p class="resumo-cd" id="resumo-41"><strong>211</strong> previsões publicadas de <strong>205 dias úteis esperados (sem feriados/facultativos)</strong> · 102,93% → nota 10/10</p>
+      <p class="resumo-cd" id="resumo-41"><strong>211</strong> previsões publicadas · 102,93% → nota 10/10</p>
       <div id="graf-41"><div class="colunas" style="gap:8px"><div class="col-item" data-tip="Seg: 39 previsões">
               <span class="col-valor">39</span>
               <span class="col-barra" style="height:77.1%;background:var(--c-aprov)"></span>
@@ -464,7 +464,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
         var dt = new Date(t), w = (dt.getUTCDay() + 6) % 7, iso = dt.toISOString().slice(0, 10);
         if(w < 5 && !nu[iso]) esperadas++;
       }
-      texto = esperadas + ' dias úteis esperados (sem feriados/facultativos)';
+      texto = '';  // 26/10/2026: página 2026 mostra só publicadas, % e nota (= meteorologia_cg.gerar_meteo_2026)
     }
     var p41 = esperadas ? arred(prev.length / esperadas * 100, 2) : 0.0, n41 = pontuar(p41, F.tabela);
     // 4.2
@@ -501,7 +501,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
              .concat(F.kpis_fixos && b >= F.kpis_fixos.desde ? F.kpis_fixos.kpis : []),  // 20/10/2026: 4.4/4.6
       ind_4_1: {por_dia_semana: ABREV.map(function(r, i){ return [r, porDia[i]]; }), intercorrencias: doInd('4.1').filter(function(x){  // 26/10/2026: sem os "considerar publicada"
           return ((x.tipo || '') + ' ' + (x.descricao || '')).toLowerCase().indexOf('considerar publicada') < 0; }),
-        resumo: '<strong>' + prev.length + '</strong> previsões publicadas de <strong>' + texto + '</strong> · ' +
+        resumo: '<strong>' + prev.length + '</strong> previsões publicadas' + (texto ? ' de <strong>' + texto + '</strong>' : '') + ' · ' +
                 pct2(p41) + ' → nota ' + n41 + '/10'},
       ind_4_2: {por_mes_dias: ms.map(function(m){ return [rotMes(m), md[m]]; }),
         por_mes_alertas: ms.map(function(m){ return [rotMes(m), ma[m]]; }),
