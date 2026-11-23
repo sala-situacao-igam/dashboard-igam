@@ -9,36 +9,38 @@
 :root{
   --surface:#fcfcfb; --page:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
   --grid:#e1e0d9; --border:rgba(11,11,11,.10); --accent:#1c3f66;
-  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3; --c-naocons:#4a4a4a;
+  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3; --c-naocons:#4a4a4a; --c-inval:#c0392b;
   --aviso-bg:#fff4d6; --aviso-ink:#5a4300; color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
     --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
-    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88;
+    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88; --c-inval:#e07a6e;
     --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
   --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
-  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88;
+  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88; --c-inval:#e07a6e;
   --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
-.pagina{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+.pagina{max-width:1760px;margin:0 auto;padding:16px 24px 40px}  /* 23/11/2026: mais largo, igual em todas as páginas */
 /* alinha a nav principal e as sub-abas (nav_site/nav_cg usam 920px) à largura da grade */
-body .nav-site, body .subnav-site{max-width:1280px}
+body .nav-site, body .subnav-site{max-width:1760px}
 .cabecalho{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:6px 0 14px}
 .cabecalho h1{font-size:1.25rem;margin:0}
 .cabecalho p{margin:0;color:var(--ink-2);font-size:.85rem}
 .aviso{background:var(--aviso-bg);color:var(--aviso-ink);border-radius:8px;padding:8px 12px;font-size:.8rem;margin-bottom:12px}
 
 /* faixa de KPIs */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+/* 23/11/2026: cartões de nota numa linha só (até 7, o máximo de uma página), mesma largura em todas as páginas */
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin-bottom:12px}
+@media (max-width:1300px){.kpis{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
 .kpi-rotulo{margin:0;color:var(--ink-2);font-size:.78rem;font-weight:600}
 .kpi-valor{margin:4px 0 0;font-size:2rem;font-weight:600;line-height:1.1}
@@ -106,6 +108,12 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .barra100-rotulos{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-2);margin-top:3px}
 .barra100-rotulos.pos{display:block;position:relative;height:1.3em}
 .barra100-rotulos.pos span{position:absolute;top:0;white-space:nowrap}
+.rosca-merge{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.rosca{width:150px;height:150px;flex:0 0 150px}.rosca-n{font-size:6px;font-weight:600;fill:var(--ink,#1a1a18)}.rosca-u{font-size:3.2px;fill:var(--ink-2,#5b5a55)}
+.rosca-leg{flex:1 1 220px;font-size:.8rem;color:var(--ink-2,#5b5a55)}.rosca-leg p{margin:0 0 8px}.rosca-leg b{color:var(--ink,#1a1a18);font-weight:600}
+.rosca-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.barra100-rotulos.lista{justify-content:flex-start;flex-wrap:wrap;column-gap:16px;row-gap:2px}
+.barra100-rotulos.lista i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .legenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--ink-2);margin:4px 0 12px}
 .legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
@@ -225,25 +233,27 @@ canvas{width:100%;height:100%;display:block;touch-action:none;cursor:crosshair}
   <a href="hidrometria.html" data-visao="serie">Série histórica</a>
   <a href="hidrometria_cg.html" data-visao="cg">Contrato de Gestão</a>
   <a href="hidrometria_consistencia.html" data-visao="consistencia" aria-current="page">Consistência por Estação</a>
+  <a href="hidrometria_testes_consistencia.html" data-visao="testes">Testes de consistência</a>
 </nav>
 <div class="pagina">
   <div class="cabecalho">
     <h1>Hidrologia — Consistência por estação</h1>
-    <p>Período: 01/07/2026 a 22/11/2026 · atualizado em 22/11/2026 às 14:26</p>
+    <p>Período: 01/07/2026 a 23/11/2026 · atualizado em 23/11/2026 às 12:58</p>
   </div>
-  <p class="nota-pagina">Precipitação e nível, por estação · aprovado = passou no teste de consistência do indicador 2.8</p>
+  <p class="nota-pagina">Precipitação e nível, por estação · classes do indicador 2.8 (testes de consistência): Válido, Suspeito e Inválido</p>
   <div class="controls"><label>Estação<select id="station"></select></label><label>Variável<select id="variable"><option value="chuva">Precipitação</option><option value="nivel">Nível</option></select></label><label>Data inicial<input id="start" type="date"></label><label>Data final<input id="end" type="date"></label><button id="reset">Período completo</button><button id="undozoom">Desfazer zoom</button></div>
   <section class="kpis" aria-label="Resumo da estação">
-    <div class="kpi"><p class="kpi-rotulo">Registros brutos</p><p class="kpi-valor" id="total"></p></div>
-    <div class="kpi"><p class="kpi-rotulo" id="label1">Aprovados</p><p class="kpi-valor" id="approved"></p></div>
-    <div class="kpi" id="card2"><p class="kpi-rotulo" id="label2">Após persistência</p><p class="kpi-valor" id="approved2"></p></div>
-    <div class="kpi"><p class="kpi-rotulo">Valores ausentes</p><p class="kpi-valor" id="missing"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Leituras coletadas</p><p class="kpi-valor" id="total"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Válidas</p><p class="kpi-valor" id="approved"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Suspeitas</p><p class="kpi-valor" id="suspect"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Inválidas</p><p class="kpi-valor" id="invalid"></p></div>
+    <div class="kpi"><p class="kpi-rotulo">Ausentes (sem valor)</p><p class="kpi-valor" id="missing"></p></div>
   </section>
   <div id="empty">Nenhum registro neste intervalo. Ajuste as datas.</div>
   <section class="panel"><h2 id="title">Distribuição temporal</h2><p class="note">Arraste para ampliar o intervalo nos dois gráficos. Use “Desfazer zoom” para voltar. Consulte valores com o cursor.</p><div class="legend"></div><div class="plot"><canvas id="rain" aria-label="Gráfico temporal de chuva"></canvas><div class="tip"></div><div class="selection"></div></div><p id="zero" class="note"></p></section>
-  <section class="panel"><h2>Número de registros por dia</h2><p class="note">Contagem diária de registros com valor preenchido. As séries após os testes são contadas separadamente.</p><div class="legend"></div><div class="plot"><canvas id="counts" aria-label="Gráfico de registros por dia"></canvas><div class="tip"></div><div class="selection"></div></div></section>
+  <section class="panel"><h2>Número de registros por dia</h2><p class="note">Contagem diária de leituras com valor (coletadas), das que não são Inválidas e das Válidas.</p><div class="legend"></div><div class="plot"><canvas id="counts" aria-label="Gráfico de registros por dia"></canvas><div class="tip"></div><div class="selection"></div></div></section>
 </div>
-<script id="manifesto" type="application/json">{"chuva":["02042051","02043133","02044079","02142096","02142097","40053100","40100100","40185010","40680001","40710001","40755000","40850010","40974900","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42435001","42550900","42690002","42860020","42970900","42980500","43300001","43429997","43669999","43675002","53511000","54195040","54501000","55610001","55660001","56083000","56933020","60012110","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"nivel":["40053100","40185010","40680001","40710001","40755000","40850010","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42550900","42690002","42860020","42970900","43300001","43429997","43669999","43675002","54501000","55610001","55660001","56083000","56933020","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"rain_status":true,"rain_limit":1000,"level_label":"Nivel (unidade nao confirmada)","pasta_dados":"dados_consistencia/","nomes":{"02042051":"Ros\u00e1rio da Limeira","02043133":"Conselheiro Lafaiete","02044079":"Lagoa Dourada","02142096":"S\u00e3o Sebasti\u00e3o da Vargem Alegre","02142097":"Mirai","40053100":"Barra do Rio S\u00e3o Miguel","40100100":"Barra do Par\u00e1","40185010":"Pari","40680001":"Entre Rios de Minas","40710001":"Belo Vale","40712500":"Bonfim","40755000":"Crucil\u00e2ndia","40850010":"Ponte da Taquara","40974900":"Fazenda S\u00e3o Felix","41075003":"Porto Passarinho","41151001":"Fazenda Agua Limpa Jusante","41180001":"Itabirito Lin\u00edgrafo","41210001":"Caet\u00e9","41940001":"Ponte do Bicudo","41955000":"Lassance","42145499":"Fazenda Umburana Montante","42251001":"Fazenda C\u00f3rrego do Ouro","42255500":"Santa Izabel","42550900":"Porto dos Po\u00e7\u00f5es","42690002":"Porto da Extrema","42860020":"Cachoeira do Pared\u00e3o","42970900":"Porto Alegre","42980500":"Barra do Rio - PTE013","43300001":"Fazenda Carvalho","43429997":"Arinos Montante","44252000":"Usina do Pandeiros Jusante","53511000":"Barra do Mosquito","54110003":"Fazenda Jambeiro - Gr\u00e3o Mogol","54193050":"Rubelita","54195040":"Barra do Salinas","54501000":"Ara\u00e7ua\u00ed","54730006":"Fazenda Boa Sorte Jusante","54770100":"Fazenda Cajueiro","55610001":"Francisco S\u00e1","55660001":"S\u00e3o Pedro do Pamp\u00e3","56083000":"Vi\u00e7osa Hidro","56860001":"S\u00e3o Pedro do Sua\u00e7u\u00ed","56933020":"Barra do Cuiet\u00e9 Jusante","56988550":"Ipanema","56990020":"S\u00e3o Sebasti\u00e3o da Encruzilhada","58910001":"Fazenda Umba\u00fabas","58921500":"Eugen\u00f3polis","60012110":"Ponte Vicent Goulart Jusante","60101100":"Abadia dos Dourados","60134000":"Barra do Perdizes","60150050":"Estrela do Sul","60359090":"Araguari","60850001":"Fazenda Buriti do Prata","60855010":"Ponte do Prata","60927010":"Ponte S\u00e3o Domingos","61060000":"Fazenda Laranjeiras","61135000":"Ibituruna","61176200":"Barra do Rio do Cervo","61260000":"Bicas","61271000":"Itajub\u00e1","61305000":"Santa Rita do Sapuca\u00ed","61370000":"Ponte dos Rodrigues","61510020":"Tr\u00eas Cora\u00e7\u00f5es","61511900":"Ch\u00e1cara Santana","61568050":"Machado","61793990":"Uberaba","61939000":"Barra Rio S\u00e3o Francisco","42395001":"Santa Rosa","42435001":"Fazenda Barra da \u00c9gua","43669999":"Vila Urucuia","43675002":"Fazenda Concei\u00e7\u00e3o"}}</script><script>
+<script id="manifesto" type="application/json">{"chuva":["02042051","02043133","02044079","02142096","02142097","40053100","40100100","40185010","40680001","40710001","40755000","40850010","40974900","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42435001","42550900","42690002","42860020","42970900","42980500","43300001","43429997","43669999","43675002","53511000","54195040","54501000","54730006","55610001","55660001","56083000","56933020","60012110","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"nivel":["40053100","40185010","40680001","40710001","40755000","40850010","40974900","41075003","41151001","41180001","41210001","41940001","42251001","42255500","42395001","42435001","42550900","42690002","42860020","42970900","42980500","43300001","43429997","43669999","43675002","54501000","54730006","55610001","55660001","56083000","56933020","60012110","60101100","60134000","60150050","60359090","60850001","60855010","60927010","61135000","61176200","61260000","61271000","61305000","61511900","61568050","61939000"],"rain_status":true,"rain_limit":1000,"level_label":"Nivel (unidade nao confirmada)","pasta_dados":"dados_consistencia/","nomes":{"02042051":"Ros\u00e1rio da Limeira","02043133":"Conselheiro Lafaiete","02044079":"Lagoa Dourada","02142096":"S\u00e3o Sebasti\u00e3o da Vargem Alegre","02142097":"Mirai","40053100":"Barra do Rio S\u00e3o Miguel","40100100":"Barra do Par\u00e1","40185010":"Pari","40680001":"Entre Rios de Minas","40710001":"Belo Vale","40712500":"Bonfim","40755000":"Crucil\u00e2ndia","40850010":"Ponte da Taquara","40974900":"Fazenda S\u00e3o Felix","41075003":"Porto Passarinho","41151001":"Fazenda Agua Limpa Jusante","41180001":"Itabirito Lin\u00edgrafo","41210001":"Caet\u00e9","41940001":"Ponte do Bicudo","41955000":"Lassance","42145499":"Fazenda Umburana Montante","42251001":"Fazenda C\u00f3rrego do Ouro","42255500":"Santa Izabel","42550900":"Porto dos Po\u00e7\u00f5es","42690002":"Porto da Extrema","42860020":"Cachoeira do Pared\u00e3o","42970900":"Porto Alegre","42980500":"Barra do Rio - PTE013","43300001":"Fazenda Carvalho","43429997":"Arinos Montante","44252000":"Usina do Pandeiros Jusante","53511000":"Barra do Mosquito","54110003":"Fazenda Jambeiro - Gr\u00e3o Mogol","54193050":"Rubelita","54195040":"Barra do Salinas","54501000":"Ara\u00e7ua\u00ed","54730006":"Fazenda Boa Sorte Jusante","54770100":"Fazenda Cajueiro","55610001":"Francisco S\u00e1","55660001":"S\u00e3o Pedro do Pamp\u00e3","56083000":"Vi\u00e7osa Hidro","56860001":"S\u00e3o Pedro do Sua\u00e7u\u00ed","56933020":"Barra do Cuiet\u00e9 Jusante","56988550":"Ipanema","56990020":"S\u00e3o Sebasti\u00e3o da Encruzilhada","58910001":"Fazenda Umba\u00fabas","58921500":"Eugen\u00f3polis","60012110":"Ponte Vicent Goulart Jusante","60101100":"Abadia dos Dourados","60134000":"Barra do Perdizes","60150050":"Estrela do Sul","60359090":"Araguari","60850001":"Fazenda Buriti do Prata","60855010":"Ponte do Prata","60927010":"Ponte S\u00e3o Domingos","61060000":"Fazenda Laranjeiras","61135000":"Ibituruna","61176200":"Barra do Rio do Cervo","61260000":"Bicas","61271000":"Itajub\u00e1","61305000":"Santa Rita do Sapuca\u00ed","61370000":"Ponte dos Rodrigues","61510020":"Tr\u00eas Cora\u00e7\u00f5es","61511900":"Ch\u00e1cara Santana","61568050":"Machado","61793990":"Uberaba","61939000":"Barra Rio S\u00e3o Francisco","42395001":"Santa Rosa","42435001":"Fazenda Barra da \u00c9gua","43669999":"Vila Urucuia","43675002":"Fazenda Concei\u00e7\u00e3o"}}</script><script>
 const MANIFEST=JSON.parse(document.getElementById('manifesto').textContent), $=id=>document.getElementById(id), DAY=86400000;
 const CACHE={chuva:{},nivel:{}};
 async function carregar(modo,estacao){
@@ -255,23 +265,25 @@ async function carregar(modo,estacao){
 let zoomRange=null, zoomHistory=[];
 const date=t=>new Date(t).toISOString().slice(0,10), fmt=t=>new Date(t).toLocaleDateString('pt-BR',{timeZone:'UTC'}), num=v=>v==null?'Ausente':v.toLocaleString('pt-BR',{maximumFractionDigits:4});
 const colors=['#d32f2f','#008f83','#dd8a20'];
-function seriesColor(i){return mode()==='nivel'&&i>0?colors[i===1?2:1]:colors[i]}
+function seriesColor(i){return colors[[0,2,1][i]]}
 function mode(){return $('variable').value||'chuva'}
-function names(){return mode()==='chuva'?['Bruto','Aprovado']:['Bruto','Após range','Após persistência']}
+function names(){return ['Coletada','Válida + Suspeita','Válida']}
 function source(){return (CACHE[mode()]||{})[$('station').value]||[]}
 async function fillStations(){const prev=$('station').value;$('station').innerHTML='';const codigos=(MANIFEST[mode()]||[]).slice().sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));for(const code of codigos){const o=document.createElement('option');o.value=code;o.textContent=code+(MANIFEST.nomes[code]?(' — '+MANIFEST.nomes[code]):'');$('station').append(o)}$('station').value=codigos.includes(prev)?prev:(codigos[0]||'');await reset()}
 async function reset(){zoomRange=null;zoomHistory=[];await carregar(mode(),$('station').value);const r=source();if(r.length){$('start').value=date(r[0][0]);$('end').value=date(r[r.length-1][0])}render()}
 function render(){const level=mode()==='nivel';let lo=zoomRange?zoomRange[0]:Date.parse($('start').value),hi=zoomRange?zoomRange[1]:Date.parse($('end').value)+DAY-1;
-const raw=source().filter(r=>r[0]>=lo&&r[0]<=hi), rows=raw.map(r=>[r[0],r[1],r[1]!=null&&r[2]?r[1]:null,...(level?[r[1]!=null&&r[3]?r[1]:null]:[])]);
-const n=rows.filter(r=>r[1]!=null).length,a=rows.filter(r=>r[2]!=null).length,b=level?rows.filter(r=>r[3]!=null).length:0;
-$('total').textContent=num(n);$('approved').textContent=(!level&&!MANIFEST.rain_status)?'Indisponível':num(a);$('approved2').textContent=num(b);$('label1').textContent=level?'Após range':'Aprovados';$('label2').textContent='Após persistência';$('card2').style.display=level?'block':'none';$('missing').textContent=num(raw.length-n);$('empty').style.display=n?'none':'block';$('empty').textContent='Sem valores preenchidos para esta variável no intervalo selecionado.';
+// 23/11/2026 (2.8 v2): r = [instante, valor, classe] -- classe 0 Válido, 1 Suspeito, 2 Inválido, 3 Ausente/Falha
+const ok=r=>r[1]!=null&&r[2]<3;
+const raw=source().filter(r=>r[0]>=lo&&r[0]<=hi), rows=raw.map(r=>[r[0],ok(r)?r[1]:null,ok(r)&&r[2]<=1?r[1]:null,ok(r)&&r[2]===0?r[1]:null]);
+const n=raw.filter(ok).length,a=raw.filter(r=>ok(r)&&r[2]===0).length,su=raw.filter(r=>ok(r)&&r[2]===1).length,iv=raw.filter(r=>ok(r)&&r[2]===2).length;
+$('total').textContent=num(n);$('approved').textContent=num(a);$('suspect').textContent=num(su);$('invalid').textContent=num(iv);$('missing').textContent=num(raw.length-n);$('empty').style.display=n?'none':'block';$('empty').textContent='Sem valores preenchidos para esta variável no intervalo selecionado.';
 $('title').textContent=level?'Distribuição temporal do nível':'Distribuição temporal da precipitação';
 const labels=names();for(const legend of document.querySelectorAll('.legend'))legend.innerHTML=labels.map((v,i)=>'<span><i style="display:inline-block;width:12px;height:12px;background:'+seriesColor(i)+';margin-right:6px"></i>'+v+'</span>').join('');
 const vals=rows.filter(r=>r[1]!=null&&(level||r[1]<=MANIFEST.rain_limit));$('zero').textContent=vals.length&&vals.every(r=>r[1]===0)?'Todos os valores disponíveis são zero; barras de altura zero não aparecem.':'';
 // Contagem: o zoom não transforma um dia parcialmente visível em dia incompleto.
-const days=new Map();if(Number.isFinite(lo)&&Number.isFinite(hi)&&lo<=hi)for(let t=Math.floor(lo/DAY)*DAY;t<=hi;t+=DAY)days.set(t,[t,0,0,...(level?[0]:[])]);
-for(const r of source()){const t=Math.floor(r[0]/DAY)*DAY,b=days.get(t);if(b&&r[1]!=null){b[1]++;if(r[2])b[2]++;if(level&&r[3])b[3]++}}
-const plotted=rows.map(r=>!level&&r[1]!=null&&r[1]>MANIFEST.rain_limit?[r[0],null,null]:r);
+const days=new Map();if(Number.isFinite(lo)&&Number.isFinite(hi)&&lo<=hi)for(let t=Math.floor(lo/DAY)*DAY;t<=hi;t+=DAY)days.set(t,[t,0,0,0]);
+for(const r of source()){const t=Math.floor(r[0]/DAY)*DAY,b=days.get(t);if(b&&ok(r)){b[1]++;if(r[2]<=1)b[2]++;if(r[2]===0)b[3]++}}
+const plotted=rows.map(r=>!level&&r[1]!=null&&r[1]>MANIFEST.rain_limit?[r[0],null,null,null]:r);
 draw('rain',plotted,lo,hi,false);draw('counts',[...days.values()],Math.floor(lo/DAY)*DAY,Math.floor(hi/DAY)*DAY+DAY-1,true)}
 // Escala recalculada com os dados visíveis em cada zoom/filtro.
 function axisBounds(rows,count,lineChart){
