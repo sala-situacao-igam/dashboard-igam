@@ -9,36 +9,38 @@
 :root{
   --surface:#fcfcfb; --page:#f4f4f1; --ink:#0b0b0b; --ink-2:#52514e; --ink-3:#898781;
   --grid:#e1e0d9; --border:rgba(11,11,11,.10); --accent:#1c3f66;
-  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3;
+  --c-aprov:#1c3f66; --c-reprov:#7ba3c9; --c-neutro:#c9d6e3; --c-naocons:#4a4a4a; --c-inval:#c0392b;
   --aviso-bg:#fff4d6; --aviso-ink:#5a4300; color-scheme:light;
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
     --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
-    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+    --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88; --c-inval:#e07a6e;
     --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --surface:#1a1a19; --page:#0d0d0d; --ink:#fff; --ink-2:#c3c2b7; --ink-3:#898781;
   --grid:#2c2c2a; --border:rgba(255,255,255,.10); --accent:#9dc0e6;
-  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47;
+  --c-aprov:#9dc0e6; --c-reprov:#46698f; --c-neutro:#4b4b47; --c-naocons:#8c8c88; --c-inval:#e07a6e;
   --aviso-bg:#3a3014; --aviso-ink:#f3dfa4; color-scheme:dark;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--page);color:var(--ink);
   font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px}
-.pagina{max-width:1280px;margin:0 auto;padding:16px 20px 40px}
+.pagina{max-width:1760px;margin:0 auto;padding:16px 24px 40px}  /* 23/11/2026: mais largo, igual em todas as páginas */
 /* alinha a nav principal e as sub-abas (nav_site/nav_cg usam 920px) à largura da grade */
-body .nav-site, body .subnav-site{max-width:1280px}
+body .nav-site, body .subnav-site{max-width:1760px}
 .cabecalho{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin:6px 0 14px}
 .cabecalho h1{font-size:1.25rem;margin:0}
 .cabecalho p{margin:0;color:var(--ink-2);font-size:.85rem}
 .aviso{background:var(--aviso-bg);color:var(--aviso-ink);border-radius:8px;padding:8px 12px;font-size:.8rem;margin-bottom:12px}
 
 /* faixa de KPIs */
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:12px}
+/* 23/11/2026: cartões de nota numa linha só (até 7, o máximo de uma página), mesma largura em todas as páginas */
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:12px;margin-bottom:12px}
+@media (max-width:1300px){.kpis{grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
 .kpi-rotulo{margin:0;color:var(--ink-2);font-size:.78rem;font-weight:600}
 .kpi-valor{margin:4px 0 0;font-size:2rem;font-weight:600;line-height:1.1}
@@ -104,6 +106,14 @@ body .nav-site, body .subnav-site{max-width:1280px}
 .barra100-trilha .seg:first-child{border-radius:4px 0 0 4px}
 .barra100-trilha .seg:last-child{border-radius:0 4px 4px 0}
 .barra100-rotulos{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-2);margin-top:3px}
+.barra100-rotulos.pos{display:block;position:relative;height:1.3em}
+.barra100-rotulos.pos span{position:absolute;top:0;white-space:nowrap}
+.rosca-merge{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.rosca{width:150px;height:150px;flex:0 0 150px}.rosca-n{font-size:6px;font-weight:600;fill:var(--ink,#1a1a18)}.rosca-u{font-size:3.2px;fill:var(--ink-2,#5b5a55)}
+.rosca-leg{flex:1 1 220px;font-size:.8rem;color:var(--ink-2,#5b5a55)}.rosca-leg p{margin:0 0 8px}.rosca-leg b{color:var(--ink,#1a1a18);font-weight:600}
+.rosca-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.barra100-rotulos.lista{justify-content:flex-start;flex-wrap:wrap;column-gap:16px;row-gap:2px}
+.barra100-rotulos.lista i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
 .legenda{display:flex;flex-wrap:wrap;gap:14px;font-size:.72rem;color:var(--ink-2);margin:4px 0 12px}
 .legenda i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
 
@@ -254,7 +264,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
   </nav>
   <div class="cabecalho">
     <h1>Metodologia adotada</h1>
-    <p>Como cada indicador é calculado · revisado em 22/10/2026</p>
+    <p>Como cada indicador é calculado · revisado em 23/11/2026</p>
   </div>
 
   
@@ -274,11 +284,11 @@ body .nav-site, body .subnav-site{max-width:1280px}
   <details class="detalhes" open><summary>Ver estações excluídas (13)</summary>
     <div class="lista-janela" tabindex="0" aria-label="Estações excluídas">
       <table><thead><tr><th>Código</th><th>Chuva</th><th>Nível</th><th>Motivo</th></tr></thead>
-      <tbody><tr><td>40100100</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar: instalada no rio são francisco, e não no rio pará</td></tr><tr><td>53511000</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54195040</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54193050</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>54770100</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>56988550</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>61370000</td><td>✕ fora</td><td>✕ fora</td><td>Danificada em acidente</td></tr><tr><td>61793990</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (estação furtada)</td></tr><tr><td>2042051</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2043133</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2044079</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142096</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142097</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr></tbody></table>
+      <tbody><tr><td>40100100</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar: instalada no rio são francisco; e não no rio pará</td></tr><tr><td>53511000</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54195040</td><td>✓ entra</td><td>✕ fora</td><td>Local de instalação a verificar</td></tr><tr><td>54193050</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>54770100</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>56988550</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (retirada de campo)</td></tr><tr><td>61370000</td><td>✕ fora</td><td>✕ fora</td><td>Danificada em acidente</td></tr><tr><td>61793990</td><td>✕ fora</td><td>✕ fora</td><td>Desinstalada (estação furtada)</td></tr><tr><td>2042051</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2043133</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2044079</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142096</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr><tr><td>2142097</td><td>✓ entra</td><td>✕ fora</td><td>Apenas pluviométrica (não mede nível)</td></tr></tbody></table>
     </div>
   </details>
 </section>
-  <section class="glossario" data-area="hidrologia" aria-label="Termos rápidos"><div class="termo"><b>96 leituras/dia</b><span>Uma leitura a cada 15 min em 24 h. É a base do 2.2 e do teste de persistência.</span></div><div class="termo"><b>Leitura coletada</b><span>Chegou à plataforma com valor. Leituras em branco contam só no 2.2.</span></div><div class="termo"><b>Leitura consistida</b><span>Coletada que passou pelo teste e saiu aprovada ou reprovada.</span></div><div class="termo"><b>z-score (IC 95%)</b><span>Aprovada se estiver dentro de média ± 1,96 desvio da própria estação.</span></div></section>
+  <section class="glossario" data-area="hidrologia" aria-label="Termos rápidos"><div class="termo"><b>96 leituras/dia</b><span>Uma leitura a cada 15 min em 24 h. É a base do 2.2 e do teste de persistência.</span></div><div class="termo"><b>Leitura coletada</b><span>Chegou à plataforma com valor. Leituras em branco contam só no 2.2.</span></div><div class="termo"><b>Leitura consistida</b><span>Coletada que passou pelos testes do 2.8 e recebeu uma classe.</span></div><div class="termo"><b>Classe da leitura</b><span>Válido, Suspeito ou Inválido: vale o pior resultado entre os testes.</span></div></section>
 
   <div data-area="hidrologia">
     <p class="grupo-tit">Hidrologia</p>
@@ -322,29 +332,32 @@ body .nav-site, body .subnav-site{max-width:1280px}
 <section class="cartao inteiro" data-area="hidrologia">
   <span class="cod">2.8</span>
   <h2>Consistência de dados</h2>
-  <p class="pergunta">O valor que chegou faz sentido? Cada leitura coletada passa por testes e sai aprovada ou reprovada.</p>
-  <p class="formula">nota = leituras consistidas ÷ leituras coletadas (soma da rede)</p>
+  <p class="pergunta">O valor que chegou faz sentido? Cada leitura de 15 min passa pelos testes das Diretrizes do Igam e recebe uma classe: Válido, Suspeito ou Inválido (a pior entre os testes).</p>
+  <p class="formula">nota = leituras consistidas ÷ leituras coletadas (chuva e nível juntos)</p>
   <div class="testes">
     <div class="teste">
-      <h3>☂ Chuva <span class="tenue">· acumulado mensal</span></h3>
+      <h3>☂ Chuva</h3>
       <ol>
-        <li><b>Valores impossíveis:</b> &lt; 0 ou &gt; 1000 (volume máximo do coletor)</li>
-        <li><b>MERGE (CPTEC/INPE):</b> compara o pluviômetro com o satélite (informativo, fora da nota)</li>
+        <li><b>Chuva negativa</b> → Inválido</li>
+        <li><b>Tetos</b> de 15 min (&gt; 50 mm), 1 h (&gt; 100 mm), 24 h (&gt; 150 mm) e mês (&gt; 1.000 mm) → Suspeito</li>
+        <li><b>Valor repetido</b>: o mesmo valor de 5 mm ou mais, 4 vezes ou mais no dia → Suspeito</li>
+        <li><b>Validação MERGE</b>: MERGE do dia 12Z–12Z ≥ 30% da chuva da estação → marcação (continua Suspeito)</li>
       </ol>
     </div>
     <div class="teste">
       <h3>≈ Nível</h3>
       <ol>
-        <li><b>Valores impossíveis</b></li>
-        <li><b>Range:</b> faixa oficial (mín./máx.) quando existe; senão z-score ± 1,96 desvio</li>
-        <li><b>Persistência (dado travado):</b> desvio das últimas 96 leituras &lt; 1% do desvio da estação → reprovada</li>
+        <li><b>Pico</b>: salto de 20 cm ou mais que volta ≥ 70% → Inválido</li>
+        <li><b>Seção transversal</b> (y_min/y_max): fora → Suspeito; sem seção cadastrada → Não testado</li>
+        <li><b>Faixa histórica (Range)</b>: fora dos percentis 0,5–99,5 da série limpa → Suspeito</li>
+        <li><b>Variação brusca ou Gradiente (step)</b>: taxa acima do limite de subida/descida → Suspeito</li>
+        <li><b>Sensor parado (Persistência)</b>: nível parado mais tempo que a referência → Suspeito</li>
       </ol>
     </div>
   </div>
-  <details class="detalhes"><summary>Por que faixa oficial + z-score?</summary>
-    <ul><li>A faixa oficial traz o conhecimento hidrológico de cada local.</li>
-        <li>O z-score dá um critério estatístico objetivo, com os dados da própria estação, para separar valores apenas atípicos (suspeitos) de valores muito fora do padrão (reprovados).</li>
-        <li>A persistência é testada só em leituras aprovadas no Range.</li></ul></details>
+  <details class="detalhes" open><summary>Como os testes são feitos: regras de cálculo (as mesmas do relatório, item 2.8.2)</summary>
+    <ul><li>Série limpa: a série histórica da estação sem os picos (Inválidos) e sem os trechos que a revisão manual definiu como Inválido (valem a partir do recálculo dos limites).</li><li>Janela de 3 meses (Faixa histórica e Sensor parado): só com 2 anos ou mais de série, contados da primeira à última leitura (incluindo os períodos sem dado). Com menos, os limites usam a série inteira. Mês sem nenhuma leitura nos 3 meses da janela: série inteira naquele mês.</li><li>Estação com menos de 100 leituras na série limpa: sem limites (Faixa histórica, step e Sensor parado = Não testado). Com menos de 100 variações válidas: só o step fica Não testado.</li><li>Sensor parado sem valor de referência próprio (poucas sequências): usa a mediana da rede.</li><li>Seção transversal: só nas estações com y_min/y_max na planilha valores_min_max.csv; as demais ficam Não testado. Estação acrescentada à planilha passa a ser testada na rodada seguinte.</li><li>Pico: salto de 20 cm ou mais que volta pelo menos 70% na leitura seguinte (vizinhas a até 30 min).</li><li>Oscilação diária (só sinalizador): janelas fixas de 7 dias seguidos, sem sobreposição; amplitude de 3 cm ou mais e correlação de 0,8 ou mais entre os dias.</li><li>Possível bateria (só sinalizador): falhas de 1 h ou mais iniciadas à noite (18h–6h) em 3 noites seguidas ou mais.</li><li>Relação chuva × nível (só pista): chuva do dia 12Z–12Z (9h–9h, horário de Brasília) de 20 mm ou mais, a maior entre a estação e o MERGE, e o nível variando menos de 2 cm nas 48 h seguintes ao fim desse dia.</li><li>Recálculo dos limites: após troca de sensor ou manutenção, caso necessário; quando a estação completar 2 anos de série (caso ainda não tenha); ou trimestralmente, se necessário.</li></ul></details>
+  <p class="nota-rodape">A revisão manual (planilha fato_revisao_manual) prevalece sobre a classe automática.</p>
 </section>
 </div>
   </div>
@@ -410,7 +423,7 @@ body .nav-site, body .subnav-site{max-width:1280px}
     <span class="crit"><span class="ic info">▦</span>Fonte: planilha de Produtos especiais</span>
     <span class="crit"><span class="ic alerta">●</span>Nota a partir de out/2026 (1º PA sem nota)</span>
   </div>
-  <details class="detalhes" open><summary>Produtos (10)</summary><ul><li>Previsão do Tempo ENAMED <span class="tenue">· 13/09/2026</span></li><li>Aviso Meteorológico de Temperaturas Elevadas <span class="tenue">· 28/09/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 01/10/2026</span></li><li>Aviso Meteorológico de Acumulados Significativos <span class="tenue">· 02/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 02/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 05/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 07/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 08/10/2026</span></li><li>Aviso Meteorológico de Tempestade Severa <span class="tenue">· 14/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 15/10/2026</span></li></ul></details>
+  <details class="detalhes" open><summary>Produtos (24)</summary><ul><li>Previsão do Tempo ENAMED <span class="tenue">· 13/09/2026</span></li><li>Aviso Meteorológico de Temperaturas Elevadas <span class="tenue">· 28/09/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 01/10/2026</span></li><li>Aviso Meteorológico de Acumulados Significativos <span class="tenue">· 02/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 02/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 05/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 06/10/2026</span></li><li>Previsão do Tempo para Nova Lima <span class="tenue">· 07/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 08/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 08/10/2026</span></li><li>Aviso Meteorológico de Tempestade Severa <span class="tenue">· 14/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 15/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 19/10/2026</span></li><li>Tendência Quinzenal <span class="tenue">· 19/10/2026</span></li><li>Aviso Meteorológico de Umidade Mínima <span class="tenue">· 22/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 22/10/2026</span></li><li>Aviso Meteorológico de Tempestade Severa <span class="tenue">· 23/10/2026</span></li><li>Tendência Quinzenal <span class="tenue">· 26/10/2026</span></li><li>Umidade Relativa do Ar Mínima <span class="tenue">· 29/10/2026</span></li><li>Previsão do Tempo para Reservatórios <span class="tenue">· 29/10/2026</span></li><li>Tendência Quinzenal <span class="tenue">· 02/11/2026</span></li><li>Previsao ENEM 2026 <span class="tenue">· 06/11/2026</span></li><li>Previsao ENEM 2026 <span class="tenue">· 08/11/2026</span></li><li>Aviso de Acumulado significativo <span class="tenue">· 18/11/2026</span></li></ul></details>
 </section>
 </div>
   </div>
